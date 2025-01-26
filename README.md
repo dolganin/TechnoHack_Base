@@ -26,8 +26,8 @@
     dotnet build
     ```
 4. Запусти проект
-```powershell
-dotnet run
-```
+    ```powershell
+    dotnet run
+    ```
 
 Работаем и разрабатываем дальше :)
