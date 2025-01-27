@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj": {}
+    "C:\\Users\\takc\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj": {
+    "C:\\Users\\takc\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj",
+        "projectUniqueName": "C:\\Users\\takc\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
         "projectName": "SignalLabelingApp",
-        "projectPath": "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj",
-        "packagesPath": "C:\\Users\\bespa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\obj\\",
+        "projectPath": "C:\\Users\\takc\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+        "packagesPath": "C:\\Users\\Виолетта\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\takc\\TechnoHack_Base\\SignalLabelingApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\bespa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Виолетта\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
