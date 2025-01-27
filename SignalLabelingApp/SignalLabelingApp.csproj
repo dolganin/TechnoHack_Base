@@ -6,7 +6,7 @@
     <LangVersion>latest</LangVersion>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <SelfContained>true</SelfContained>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier> <!-- Укажите нужный RID -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier> 
   </PropertyGroup>
   
   <ItemGroup>
