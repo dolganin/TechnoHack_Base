@@ -2,9 +2,12 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Layout;
+using Avalonia.Media;
+using Avalonia.Interactivity;
 using SignalLabelingApp.Classes;
 using System.Threading.Tasks;
 using Label = SignalLabelingApp.Classes.Label;
+
 
 namespace SignalLabelingApp.Views
 {
@@ -43,18 +46,29 @@ namespace SignalLabelingApp.Views
 
         }
 
-        private void UpdateDatasetSamplesView()
+        private void UpdateDatasetSamplesView(/*object sender, RoutedEventArgs e*/)
         {
             CreatedLabels.Children.Clear();
-
+            
             foreach (var sample in Globals.AllDatasetSamples)
             {
+                if (sample.Label == null) continue;
+
                 Label label = sample.Label;
+                
                 var labelBlock = new StackPanel
                 {
                     Orientation = Orientation.Vertical,
-                    Margin = new Thickness(5)
+                    Margin = new Thickness(0),
                 };
+
+                var border = new Border
+                {
+                    BorderBrush = Brushes.Black, // Цвет рамки
+                    BorderThickness = new Thickness(1), // Толщина рамки  
+                };
+
+                border.Child = labelBlock;
 
                 if (label is SignalClassificationLabel classificationLabel)
                 {
@@ -81,9 +95,47 @@ namespace SignalLabelingApp.Views
                     labelBlock.Children.Add(new TextBlock { Text = $"End: {segmentationLabel.ObjectEndPos}" });
                 }
 
-               CreatedLabels.Children.Add(labelBlock);
+                //CreatedLabels.Children.Add(border);
+                //Button deleteButton = new Button { Content = "Удалить", Tag = elementPanel };
+
+                // Добавление обработчика события для кнопки удаления
+                //deleteButton.Click += DeleteButton_Click;
+
+              
+                //elementPanel.Children.Add(deleteButton);
+                //elementCount++;
+                //private void DeleteButton_Click(object sender, RoutedEventArgs e)
+        {
+            // Получение панели, содержащей кнопку удаления
+            /*Button deleteButton = (Button)sender;
+            StackPanel elementPanel = (StackPanel)deleteButton.Tag;
+
+            // Удаление элемента из стек-панели
+            editableStackPanel.Children.Remove(elementPanel);*/
+        }
+
+
+        // Добавляем кнопку удаления
+        var deleteButton = new Button
+        {
+            Content = "Delete",
+            Margin = new Thickness(5),
+        };
+
+        // Подписываемся на событие нажатия на кнопку удаления
+        deleteButton.Click += (s, e) =>
+        {
+            Globals.AllDatasetSamples.Remove(sample);
+        };
+
+        labelBlock.Children.Add(deleteButton);
+
+        CreatedLabels.Children.Add(border);
+                
             }
         }
 
     }
+    
 }
+ 
