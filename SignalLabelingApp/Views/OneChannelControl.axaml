@@ -1,0 +1,32 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			x:Class="SignalLabelingApp.Views.OneChannelControl">
+
+    <Grid ColumnDefinitions="Auto *" > 
+        <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <Canvas x:Name="AxisCanvas" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="Gray">
+                 <!-- <Line Stroke="Black"
+                      StrokeThickness="1"
+                      X1="10" X2="10"
+                      Y1="10"
+                      Y2="{Binding ActualHeight, RelativeSource={RelativeSource AncestorType=Canvas}, Converter={x:Static ObjectConverters.Subtract}, ConverterParameter=10}"/>
+
+                
+                <Path Data="M5,10 L10,5 L15,10"
+                      Stroke="Black"
+                      Fill="Black"/> -->
+            </Canvas>
+            <TextBlock x:Name="HighValue" HorizontalAlignment="Left" VerticalAlignment="Top"/>
+            <TextBlock x:Name="MiddleValue" HorizontalAlignment="Left" VerticalAlignment="Center"/>
+            <TextBlock x:Name="LowValue" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+            
+        </Grid>
+        <Canvas x:Name="OneChannelCanvas" Grid.Column="1"/>
+
+        
+    
+    </Grid> 
+
+
+
+</UserControl>

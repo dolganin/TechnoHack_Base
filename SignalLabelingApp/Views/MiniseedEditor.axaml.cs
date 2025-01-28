@@ -20,7 +20,7 @@ namespace SignalLabelingApp.Views
     public partial class MiniseedEditor : EditorBase
     {
         public Canvas EditorCanvas;
-        public ScrollViewer EditorSñrollViewer;
+        public ScrollViewer EditorSï¿½rollViewer;
         public Slider ScaleXSlider;
 
         private Flyout settingsFlyout;
@@ -51,11 +51,11 @@ namespace SignalLabelingApp.Views
             {
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Visible,
             };
-            EditorSñrollViewer = canvasScrollViewer;
+            EditorSï¿½rollViewer = canvasScrollViewer;
 
-            var canvas = new Canvas
+            var ChannelsPanel = new StackPanel
             {
-                Background = Brushes.LightGray
+                
             };
 
             EditorCanvas = canvas;
@@ -128,9 +128,9 @@ namespace SignalLabelingApp.Views
             buttonPanel.Children.Add(settingsButton);
 
             stationComboBox.Margin = new Thickness(10, 10, 10, 10);
-            EditorSñrollViewer.Content = EditorCanvas;
+            EditorSï¿½rollViewer.Content = EditorCanvas;
 
-            EditorGrid.Children.Add(EditorSñrollViewer);
+            EditorGrid.Children.Add(EditorSï¿½rollViewer);
             EditorGrid.Children.Add(buttonPanel);
             EditorGrid.Children.Add(stationComboBox);
             EditorGrid.Children.Add(scaleXSlider);
@@ -189,10 +189,10 @@ namespace SignalLabelingApp.Views
             };
             adaptiveSizeTextBox.AddHandler(TextInputEvent, (sender, e) =>
             {
-                // Ïðîâåðÿåì, ÷òî ââîäèìîå çíà÷åíèå — öèôðà
+                // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
                 if (!int.TryParse(e.Text, out _))
                 {
-                    e.Handled = true; // Çàïðåùàåì ââîä, åñëè ýòî íå ÷èñëî
+                    e.Handled = true; // ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½
                 }
             }, RoutingStrategies.Tunnel);
             adaptiveSizeTextBox.PropertyChanged += (sender, e) =>
@@ -216,13 +216,13 @@ namespace SignalLabelingApp.Views
         {
             if (e.Property == Slider.ValueProperty && e.NewValue is double newValue && e.OldValue is double oldValue)
             {
-                double previousOffsetX = EditorSñrollViewer.Offset.X;
+                double previousOffsetX = EditorSï¿½rollViewer.Offset.X;
                 objectSelectionManager.DrawScaleX = (float)newValue;
 
                 UpdateCanvasWidth();
 
                 double newOffsetX = previousOffsetX * (newValue / oldValue);
-                EditorSñrollViewer.Offset = new Vector(newOffsetX, EditorSñrollViewer.Offset.Y);
+                EditorSï¿½rollViewer.Offset = new Vector(newOffsetX, EditorSï¿½rollViewer.Offset.Y);
 
             }
         }
@@ -257,7 +257,7 @@ namespace SignalLabelingApp.Views
 
                 RedrawVisibleSignal();
                 
-                EditorSñrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+                EditorSï¿½rollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
             }
         }
 
@@ -280,8 +280,8 @@ namespace SignalLabelingApp.Views
 
             EditorCanvas.Children.Add(stationComboBox);
 
-            double startX = EditorSñrollViewer.Offset.X;
-            double endX = startX + EditorSñrollViewer.Viewport.Width;
+            double startX = EditorSï¿½rollViewer.Offset.X;
+            double endX = startX + EditorSï¿½rollViewer.Viewport.Width;
 
             int channelHeight = (int)(EditorCanvas.Bounds.Height / 3);
 
@@ -289,77 +289,6 @@ namespace SignalLabelingApp.Views
             RedrawOneChannel(channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
             RedrawOneChannel(2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
         }
-
-        private void RedrawOneChannel(int channelStartY, int channelHeight, TraceData trace, double startX, double endX, ImmutableSolidColorBrush brush)
-        {
-            if (trace == null || trace.data == null || trace.data.Count == 0)
-                return;
-
-            var polyline = new Polyline
-            {
-                Stroke = brush,
-                StrokeThickness = 1
-            };
-            var HorPolyline = new Polyline
-            {
-                Stroke = Brushes.Black,
-                StrokeThickness = 1
-            };
-
-            int startIndex = Math.Max(0, (int)(startX / objectSelectionManager.DrawScaleX));
-            int endIndex = Math.Min(trace.data.Count, (int)(endX / objectSelectionManager.DrawScaleX));
-
-            float maxValue = GetMaxInRange(trace, startIndex, endIndex); 
-            float minValue = GetMinInRange(trace, startIndex, endIndex);
-
-            if (maxValue == 0)
-                return;
-
-            float centerY = channelStartY + channelHeight / 2;
-
-            for (int i = startIndex; i < endIndex; i++)
-            {
-                float x = i * objectSelectionManager.DrawScaleX;
-                float y = centerY - (2 * (float)(trace.data[i] - minValue) / (maxValue - minValue) - 1) * ((float)(channelHeight) / 2 - 2); 
-
-                polyline.Points.Add(new Avalonia.Point(x, y));
-                HorPolyline.Points.Add(new Avalonia.Point(x, channelStartY + channelHeight));
-            }
-
-            EditorCanvas.Children.Add(polyline);
-            EditorCanvas.Children.Add(HorPolyline);
-        }
-
-        
-
-        public static float GetMaxInRange(TraceData trace, int x1, int x2)
-        {
-            if (trace == null || trace.data == null || trace.data.Count == 0)
-                throw new ArgumentException("Trace data is null or empty.");
-
-            x1 = Math.Max(0, x1);
-            x2 = Math.Min(trace.data.Count, x2);
-
-            if (x1 >= x2)
-                throw new ArgumentException("Invalid range: x1 should be less than x2.");
-
-            return trace.data.Skip(x1).Take(x2 - x1).Max();
-        }
-
-        public static float GetMinInRange(TraceData trace, int x1, int x2)
-        {
-            if (trace == null || trace.data == null || trace.data.Count == 0)
-                throw new ArgumentException("Trace data is null or empty.");
-
-            x1 = Math.Max(0, x1);
-            x2 = Math.Min(trace.data.Count, x2);
-
-            if (x1 >= x2)
-                throw new ArgumentException("Invalid range: x1 should be less than x2.");
-
-            return trace.data.Skip(x1).Take(x2 - x1).Min();
-        }
-
 
     }
 }

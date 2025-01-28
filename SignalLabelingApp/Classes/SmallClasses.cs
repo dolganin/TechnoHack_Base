@@ -6,6 +6,8 @@ using System.Numerics;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
+using Avalonia.Controls.Shapes;
+using Avalonia.Media;
 
 namespace SignalLabelingApp.Classes
 {
@@ -20,6 +22,28 @@ namespace SignalLabelingApp.Classes
         public string AmountOfStations { get; set; }
         public string Description { get; set; }
     }
+
+    public class NamedRectangle : Rectangle
+    {
+        public string Name { get; private set; }
+        public List<NamedRectangle> OrangeRectangles { get; set; } = new();
+
+        public NamedRectangle(int name)
+        {
+            Name = name.ToString();
+        }
+
+        public NamedRectangle(int name, double width, double height, IBrush fill) : base()
+        {
+            Name = name.ToString();
+            Width = width;
+            Height = height;
+            Fill = fill;
+        }
+    }
+
+
+    
 
 
     public class MiniseedFile
@@ -99,5 +123,6 @@ namespace SignalLabelingApp.Classes
         public double ObjectStartPos;
         public double ObjectEndPos;
     }
+
 
 }
