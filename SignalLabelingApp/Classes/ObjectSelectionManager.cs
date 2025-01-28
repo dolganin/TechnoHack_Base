@@ -13,6 +13,8 @@ using Avalonia.Collections;
 using Avalonia.Interactivity;
 using System.Collections.ObjectModel;
 using SignalLabelingApp.Views;
+using SignalLabelingApp.ViewModels;
+
 
 namespace SignalLabelingApp.Classes
 {
@@ -58,13 +60,21 @@ namespace SignalLabelingApp.Classes
             CanvasToTrack.PointerReleased += Canvas_PointerReleased;
         }
 
+        private void ShowError(string message)
+        {
+            var errorWindow = new ErrorWindow();
+            var viewModel = errorWindow.DataContext as ErrorWindowViewModel;
+            viewModel?.SetErrorMessage(message);
+            errorWindow.Show();
+        }
 
 
         public void SaveSelection()
         {
             if (singleSelectionRectangle == null)
             {
-                Console.WriteLine("Error: No blue area selected using Left Mouse Button.");
+                ShowError("Error: No blue area selected using Left Mouse Button.");
+                //Console.WriteLine();
                 return;
             }
 
@@ -106,7 +116,8 @@ namespace SignalLabelingApp.Classes
                     }
                     else
                     {
-                        Console.WriteLine("Error: One or more orange areas are outside the blue area.");
+                        ShowError("Error: One or more orange areas are outside the blue area.");
+                        //Console.WriteLine("Error: One or more orange areas are outside the blue area.");
                         return;
                     }
                 }
