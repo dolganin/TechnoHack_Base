@@ -32,11 +32,14 @@ namespace SignalLabelingApp.Classes
         private Line? leftDashedLine;
         private Line? rightDashedLine;
         private List<NamedRectangle> multiSelectionRectangles = new(); // Для ПКМ выделений
+        private List<TextBlock> blueTextBlocks = new(); // Для хранения TextBlock синих прямоугольников
+        private List<TextBlock> orangeTextBlocks = new(); // Для хранения TextBlock оранжевых прямоугольников
 
         private bool isDrawingRectangle = false;
         private bool isRightClick = false; // Флаг для определения ПКМ
         private int startX = 0;
-        private int rectangleIdCounter = 0; // Счетчик для ID прямоугольников
+        private int blueRectangleIdCounter = 0; // Счетчик для ID синих прямоугольников
+        private int orangeRectangleIdCounter = 0; // Счетчик для ID оранжевых прямоугольников
 
         public int objectClassId = 0;
         public string selectedLabelType = "Classification";
@@ -202,15 +205,36 @@ namespace SignalLabelingApp.Classes
             isDrawingRectangle = true;
             isRightClick = e.GetCurrentPoint(CanvasToTrack).Properties.IsRightButtonPressed;
 
-            if (!isRightClick && singleSelectionRectangle != null)
+            if (!isRightClick)
             {
-                // Удалить старую область, если используется ЛКМ
-                CanvasToTrack.Children.Remove(singleSelectionRectangle);
-                singleSelectionRectangle = null;
+                // Удалить все старые области, если используется ЛКМ
+                foreach (var old_rectangle in multiSelectionRectangles)
+                {
+                    CanvasToTrack.Children.Remove(old_rectangle);
+                    var txtBlock = orangeTextBlocks.FirstOrDefault(tb => tb.Text == old_rectangle.Name);
+                    if (txtBlock != null)
+                    {
+                        CanvasToTrack.Children.Remove(txtBlock);
+                    }
+                }
+                multiSelectionRectangles.Clear();
+                orangeTextBlocks.Clear();
+
+                if (singleSelectionRectangle != null)
+                {
+                    CanvasToTrack.Children.Remove(singleSelectionRectangle);
+                    var txtBlock = blueTextBlocks.FirstOrDefault(tb => tb.Text == singleSelectionRectangle.Name);
+                    if (txtBlock != null)
+                    {
+                        CanvasToTrack.Children.Remove(txtBlock);
+                    }
+                    singleSelectionRectangle = null;
+                }
+                blueTextBlocks.Clear();
             }
 
             var fillColor = isRightClick ? Colors.Orange : Colors.LightBlue;
-            var rectangle = new NamedRectangle(rectangleIdCounter++)
+            var rectangle = new NamedRectangle(isRightClick ? ++orangeRectangleIdCounter : ++blueRectangleIdCounter)
             {
                 Fill = new ImmutableSolidColorBrush(fillColor, 0.5),
                 Height = CanvasToTrack.Bounds.Height,
@@ -218,25 +242,34 @@ namespace SignalLabelingApp.Classes
                 Margin = new Thickness(startX, 0, 0, 0)
             };
 
-            var textBlock = new TextBlock
             {
-                Text = rectangle.Name,
-                Foreground = Brushes.Black,
-                FontWeight = FontWeight.Bold,
-                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-            };
+                var textBlock = new TextBlock
+                {
+                    Text = rectangle.Name,
+                    Foreground = Brushes.Black,
+                    FontSize = 20,
+                    FontWeight = FontWeight.Bold,
+                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+                };
 
-            CanvasToTrack.Children.Add(rectangle);
-            CanvasToTrack.Children.Add(textBlock);
+                CanvasToTrack.Children.Add(rectangle);
+                CanvasToTrack.Children.Add(textBlock);
 
-            Canvas.SetLeft(textBlock, startX + rectangle.Width / 2);
-            Canvas.SetTop(textBlock, rectangle.Height / 2);
+                Canvas.SetLeft(textBlock, startX + rectangle.Width / 2);
+                Canvas.SetTop(textBlock, rectangle.Height / 2);
 
-            if (isRightClick)
-                multiSelectionRectangles.Add(rectangle);
-            else
-                singleSelectionRectangle = rectangle;
+                if (isRightClick)
+                {
+                    multiSelectionRectangles.Add(rectangle);
+                    orangeTextBlocks.Add(textBlock);
+                }
+                else
+                {
+                    singleSelectionRectangle = rectangle;
+                    blueTextBlocks.Add(textBlock);
+                }
+            }
         }
 
         private void Canvas_PointerMoved(object? sender, PointerEventArgs e)
@@ -258,8 +291,8 @@ namespace SignalLabelingApp.Classes
                     rectangle.Margin = new Thickness(currentX, 0, 0, 0);
                 else
                     rectangle.Margin = new Thickness(startX, 0, 0, 0);
-                
-                var textBlock = CanvasToTrack.Children.OfType<TextBlock>().FirstOrDefault(tb => tb.Text == rectangle.Name);
+
+                var textBlock = isRightClick ? orangeTextBlocks.Last() : blueTextBlocks.Last();
                 if (textBlock != null)
                 {
                     Canvas.SetLeft(textBlock, rectangle.Margin.Left + rectangle.Width / 2);
@@ -285,7 +318,7 @@ namespace SignalLabelingApp.Classes
                     singleSelectionRectangle.Width = CanvasToTrack.Width - singleSelectionRectangle.Margin.Left;
                 }
 
-                var textBlock = CanvasToTrack.Children.OfType<TextBlock>().FirstOrDefault(tb => tb.Text == singleSelectionRectangle.Name);
+                var textBlock = blueTextBlocks.Last();
                 if (textBlock != null)
                 {
                     Canvas.SetLeft(textBlock, singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width / 2);
