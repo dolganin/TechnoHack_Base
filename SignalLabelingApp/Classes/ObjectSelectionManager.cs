@@ -99,7 +99,7 @@ namespace SignalLabelingApp.Classes
                     Objects = new ObservableCollection<DetectionObject>()
                 };
 
-                foreach (var rect in multiSelectionRectangles)
+                foreach (var rect in singleSelectionRectangle.OrangeRectangles)
                 {
                     double rectStart = rect.Margin.Left / DrawScaleX;
                     double rectEnd = (rect.Margin.Left + rect.Width) / DrawScaleX;
@@ -233,6 +233,13 @@ namespace SignalLabelingApp.Classes
                 blueTextBlocks.Clear();
             }
 
+            if (isRightClick && singleSelectionRectangle == null)
+            {
+                ShowError("Error: No blue area selected. Please select a blue area first.");
+                isDrawingRectangle = false;
+                return;
+            }
+
             var fillColor = isRightClick ? Colors.Orange : Colors.LightBlue;
             var rectangle = new NamedRectangle(isRightClick ? ++orangeRectangleIdCounter : ++blueRectangleIdCounter)
             {
@@ -304,6 +311,27 @@ namespace SignalLabelingApp.Classes
         private void Canvas_PointerReleased(object? sender, PointerReleasedEventArgs e)
         {
             isDrawingRectangle = false;
+
+            if (isRightClick && singleSelectionRectangle != null)
+            {
+                var orangeRectangle = multiSelectionRectangles.Last();
+                var blueRectangle = singleSelectionRectangle;
+
+                if (orangeRectangle.Margin.Left < blueRectangle.Margin.Left ||
+                    orangeRectangle.Margin.Left + orangeRectangle.Width > blueRectangle.Margin.Left + blueRectangle.Width)
+                {
+                    ShowError("Error: The orange area is outside the bounds of the blue area.");
+                    CanvasToTrack.Children.Remove(orangeRectangle);
+                    var txtBlock = orangeTextBlocks.Last();
+                    CanvasToTrack.Children.Remove(txtBlock);
+                    multiSelectionRectangles.Remove(orangeRectangle);
+                    orangeTextBlocks.Remove(txtBlock);
+                }
+                else
+                {
+                    blueRectangle.OrangeRectangles.Add(orangeRectangle);
+                }
+            }
 
             if (!isRightClick && adaptiveSizeEnabled && singleSelectionRectangle != null)
             {

@@ -23,9 +23,10 @@ namespace SignalLabelingApp.Classes
         public string Description { get; set; }
     }
 
-        public class NamedRectangle : Rectangle
+    public class NamedRectangle : Rectangle
     {
         public string Name { get; private set; }
+        public List<NamedRectangle> OrangeRectangles { get; set; } = new();
 
         public NamedRectangle(int name)
         {
@@ -40,6 +41,7 @@ namespace SignalLabelingApp.Classes
             Fill = fill;
         }
     }
+
 
     
 
