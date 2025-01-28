@@ -15,7 +15,6 @@ using System.Collections.ObjectModel;
 using SignalLabelingApp.Views;
 using SignalLabelingApp.ViewModels;
 
-
 namespace SignalLabelingApp.Classes
 {
     public class SelectionObject
@@ -25,21 +24,19 @@ namespace SignalLabelingApp.Classes
         public double EndPosition { get; set; } // Конечная позиция
         public ImmutableSolidColorBrush MainColor { get; set; } // Цвет основного выделения
         public List<(double Start, double End, ImmutableSolidColorBrush Color)> AdditionalSelections { get; set; } // Дополнительные выделения (например, оранжевые области)
-
     }
-
 
     public class ObjectSelectionManager
     {
-        private Rectangle? singleSelectionRectangle; // Для ЛКМ выделения
+        private NamedRectangle? singleSelectionRectangle; // Для ЛКМ выделения
         private Line? leftDashedLine;
         private Line? rightDashedLine;
-        private List<Rectangle> multiSelectionRectangles = new(); // Для ПКМ выделений
-
+        private List<NamedRectangle> multiSelectionRectangles = new(); // Для ПКМ выделений
 
         private bool isDrawingRectangle = false;
         private bool isRightClick = false; // Флаг для определения ПКМ
         private int startX = 0;
+        private int rectangleIdCounter = 0; // Счетчик для ID прямоугольников
 
         public int objectClassId = 0;
         public string selectedLabelType = "Classification";
@@ -47,13 +44,13 @@ namespace SignalLabelingApp.Classes
         public double adaptiveSizeValue = 10.0;
         public float DrawScaleX = 0.5f;
 
-        private Rectangle? currentRectangle;
+        private NamedRectangle? currentRectangle;
         private Line? startDashedLine;
 
         private Canvas CanvasToTrack;
 
-        public ObjectSelectionManager(Canvas canvasToTrack) {
-
+        public ObjectSelectionManager(Canvas canvasToTrack)
+        {
             CanvasToTrack = canvasToTrack;
             CanvasToTrack.PointerPressed += Canvas_PointerPressed;
             CanvasToTrack.PointerMoved += Canvas_PointerMoved;
@@ -68,20 +65,17 @@ namespace SignalLabelingApp.Classes
             errorWindow.Show();
         }
 
-
         public void SaveSelection()
         {
             if (singleSelectionRectangle == null)
             {
                 ShowError("Error: No blue area selected using Left Mouse Button.");
-                //Console.WriteLine();
                 return;
             }
 
             double objectStartPos = singleSelectionRectangle.Margin.Left / DrawScaleX;
             double objectEndPos = (singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width) / DrawScaleX;
 
-            
             Label label = null;
 
             if (selectedLabelType == "Classification")
@@ -107,9 +101,6 @@ namespace SignalLabelingApp.Classes
                     double rectStart = rect.Margin.Left / DrawScaleX;
                     double rectEnd = (rect.Margin.Left + rect.Width) / DrawScaleX;
 
-                    Console.WriteLine($"Checking orange area: Start={rectStart}, End={rectEnd}");
-                    Console.WriteLine($"Blue area bounds: Start={objectStartPos}, End={objectEndPos}");
-
                     if (rectStart >= objectStartPos && rectEnd <= objectEndPos)
                     {
                         detectionLabel.Objects.Add(new DetectionObject() { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId });
@@ -117,7 +108,6 @@ namespace SignalLabelingApp.Classes
                     else
                     {
                         ShowError("Error: One or more orange areas are outside the blue area.");
-                        //Console.WriteLine("Error: One or more orange areas are outside the blue area.");
                         return;
                     }
                 }
@@ -197,7 +187,6 @@ namespace SignalLabelingApp.Classes
             return traceData.data.Skip(startIndex).Take(endIndex - startIndex + 1).ToList();
         }
 
-
         private void AddDatasetSampleToGlobals(DatasetSample sample)
         {
             if (!Globals.AllDatasetSamples.Contains(sample))
@@ -221,7 +210,7 @@ namespace SignalLabelingApp.Classes
             }
 
             var fillColor = isRightClick ? Colors.Orange : Colors.LightBlue;
-            var rectangle = new Rectangle
+            var rectangle = new NamedRectangle(rectangleIdCounter++)
             {
                 Fill = new ImmutableSolidColorBrush(fillColor, 0.5),
                 Height = CanvasToTrack.Bounds.Height,
@@ -229,7 +218,20 @@ namespace SignalLabelingApp.Classes
                 Margin = new Thickness(startX, 0, 0, 0)
             };
 
+            var textBlock = new TextBlock
+            {
+                Text = rectangle.Name,
+                Foreground = Brushes.Black,
+                FontWeight = FontWeight.Bold,
+                HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+            };
+
             CanvasToTrack.Children.Add(rectangle);
+            CanvasToTrack.Children.Add(textBlock);
+
+            Canvas.SetLeft(textBlock, startX + rectangle.Width / 2);
+            Canvas.SetTop(textBlock, rectangle.Height / 2);
 
             if (isRightClick)
                 multiSelectionRectangles.Add(rectangle);
@@ -256,6 +258,13 @@ namespace SignalLabelingApp.Classes
                     rectangle.Margin = new Thickness(currentX, 0, 0, 0);
                 else
                     rectangle.Margin = new Thickness(startX, 0, 0, 0);
+                
+                var textBlock = CanvasToTrack.Children.OfType<TextBlock>().FirstOrDefault(tb => tb.Text == rectangle.Name);
+                if (textBlock != null)
+                {
+                    Canvas.SetLeft(textBlock, rectangle.Margin.Left + rectangle.Width / 2);
+                    Canvas.SetTop(textBlock, rectangle.Height / 2);
+                }
             }
         }
 
@@ -275,6 +284,13 @@ namespace SignalLabelingApp.Classes
                 {
                     singleSelectionRectangle.Width = CanvasToTrack.Width - singleSelectionRectangle.Margin.Left;
                 }
+
+                var textBlock = CanvasToTrack.Children.OfType<TextBlock>().FirstOrDefault(tb => tb.Text == singleSelectionRectangle.Name);
+                if (textBlock != null)
+                {
+                    Canvas.SetLeft(textBlock, singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width / 2);
+                    Canvas.SetTop(textBlock, singleSelectionRectangle.Height / 2);
+                }
             }
 
             // Добавляем пунктирные линии на границы области
@@ -287,7 +303,7 @@ namespace SignalLabelingApp.Classes
             startDashedLine = null;
         }
 
-        private void AddDashedLines(Rectangle rectangle)
+        private void AddDashedLines(NamedRectangle rectangle)
         {
             // Удаляем старые линии, если они существуют
             if (leftDashedLine != null) CanvasToTrack.Children.Remove(leftDashedLine);
@@ -317,6 +333,5 @@ namespace SignalLabelingApp.Classes
             CanvasToTrack.Children.Add(leftDashedLine);
             CanvasToTrack.Children.Add(rightDashedLine);
         }
-
     }
 }
