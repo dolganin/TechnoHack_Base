@@ -76,6 +76,13 @@ namespace SignalLabelingApp.Classes
                 return;
             }
 
+            // Check if orange zones are required
+            if (selectedLabelType != "Classification" && singleSelectionRectangle.OrangeRectangles.Count == 0)
+            {
+                ShowError("Error: Orange zones are required for this task type. Please add at least one orange zone.");
+                return;
+            }
+
             double objectStartPos = singleSelectionRectangle.Margin.Left / DrawScaleX;
             double objectEndPos = (singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width) / DrawScaleX;
 
@@ -292,12 +299,42 @@ namespace SignalLabelingApp.Classes
 
             if (rectangle != null)
             {
-                rectangle.Width = rectWidth;
+                if (isRightClick && singleSelectionRectangle != null)
+                {
+                    var blueRectangle = singleSelectionRectangle;
+                    double blueLeft = blueRectangle.Margin.Left;
+                    double blueRight = blueLeft + blueRectangle.Width;
 
-                if (currentX < startX)
-                    rectangle.Margin = new Thickness(currentX, 0, 0, 0);
+                    if (currentX < startX)
+                    {
+                        // Moving left
+                        if (currentX < blueLeft)
+                        {
+                            currentX = blueLeft;
+                        }
+                        rectangle.Margin = new Thickness(currentX, 0, 0, 0);
+                        rectangle.Width = startX - currentX;
+                    }
+                    else
+                    {
+                        // Moving right
+                        if (currentX > blueRight)
+                        {
+                            currentX = blueRight;
+                        }
+                        rectangle.Margin = new Thickness(startX, 0, 0, 0);
+                        rectangle.Width = currentX - startX;
+                    }
+                }
                 else
-                    rectangle.Margin = new Thickness(startX, 0, 0, 0);
+                {
+                    rectangle.Width = rectWidth;
+
+                    if (currentX < startX)
+                        rectangle.Margin = new Thickness(currentX, 0, 0, 0);
+                    else
+                        rectangle.Margin = new Thickness(startX, 0, 0, 0);
+                }
 
                 var textBlock = isRightClick ? orangeTextBlocks.Last() : blueTextBlocks.Last();
                 if (textBlock != null)
