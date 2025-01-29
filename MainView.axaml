@@ -1,0 +1,85 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			x:Class="SignalLabelingApp.Views.MainView"
+>
+
+
+	
+
+		<!-- 
+        DockPanel автоматически растягивает последний вложенный 
+        элемент на всё доступное пространство (LastChildFill="True"). 
+        Остальные элементы “прижимаются” к краям, согласно Dock="…".
+    -->
+		<DockPanel LastChildFill="True">
+
+			<!-- Верхняя панель, где располагается заголовок (Header) --><!--
+			<Border DockPanel.Dock="Top"
+					Background="#DDD"
+					Padding="10">
+				<TextBlock Text="Header"
+						   FontSize="18"
+						   VerticalAlignment="Center"/>
+			</Border>-->
+
+			<!-- Меню (Menu bar) располагается под заголовком -->
+			<Menu DockPanel.Dock="Top">
+				<MenuItem Header="_File">
+					<MenuItem x:Name="OpenFileMenuItem" Header="Open"/>
+					<MenuItem x:Name="SaveMenuItem" Header="Save dataset"/>
+					<MenuItem Header="Exit"/>
+				</MenuItem>
+				
+				<MenuItem Header="_Edit">
+					<MenuItem Header="Undo"/>
+					<MenuItem Header="Redo"/>
+				</MenuItem>
+			</Menu>
+
+
+
+			<!-- Левая панель для списка файлов (Project files) -->
+			<!--<Border DockPanel.Dock="Left"
+					Background="#EEE"
+					Padding="10"
+					Width="200">
+				<TextBlock Text="Project files"/>
+			</Border>-->
+
+			<!-- Правая панель для списка меток (Created labels) -->
+			<Border x:Name="CreatedLabelsBorder"
+				    DockPanel.Dock="Right"
+					Background="#EEE"
+					Padding="10"
+					Width="200">
+				<ScrollViewer VerticalScrollBarVisibility="Visible">
+						<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5">
+					</StackPanel>
+				</ScrollViewer>
+			</Border>
+
+			<!-- Центральная область под редактор (Editor).
+             Поскольку LastChildFill=True, 
+             этот элемент автоматически заполняет оставшееся пространство. -->
+			<Grid RowDefinitions="* 0.1*">
+				<Border x:Name="EditorZone" 
+					Grid.Row="0"
+					Background="#FFF"
+						Margin="10"
+						>
+				</Border>
+
+				<!-- Нижняя панель для “Editor metadata and additional info” -->
+				<!--<Border x:Name="EditorMetadata"
+					Grid.Row="1"
+					DockPanel.Dock="Bottom"
+						Background="#F2F2F2"
+						Padding="10">
+
+				</Border>-->
+			</Grid>
+
+		</DockPanel>
+
+
+</UserControl>
