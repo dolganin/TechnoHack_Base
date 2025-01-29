@@ -1,0 +1,30 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:SignalLabelingApp.Views"
+      x:Class="SignalLabelingApp.Views.OxControl">
+
+    <UserControl.Resources>
+        <local:CanvasSizeToLineGeometryConverter x:Key="CanvasSizeToLineGeometryConverterOx"/>
+    </UserControl.Resources>
+
+    <Border Background="#CCCCCC">
+        <Grid ColumnDefinitions="Auto *"> 
+            <Grid Grid.String="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                <TextBlock x:Name="minValue" HorizontalAlignment="Left" VerticalAlignment="Bottom"  Width="50" />
+                <TextBlock x:Name="Value1"  VerticalAlignment="Bottom"  Width="50" />
+                <TextBlock x:Name="Value2"  VerticalAlignment="Bottom" Width="50" />
+                <TextBlock x:Name="Value3"  VerticalAlignment="Bottom" Width="50" />
+                <TextBlock x:Name="Value4"  VerticalAlignment="Bottom"  Width="50" />
+                <TextBlock x:Name="middleValue" HorizontalAlignment="Center" VerticalAlignment="Bottom" Width="50" />
+                <TextBlock x:Name="Value6"  VerticalAlignment="Bottom" Width="50" />
+                <TextBlock x:Name="Value7"  VerticalAlignment="Bottom"  Width="50" />
+                <TextBlock x:Name="Value8" VerticalAlignment="Bottom" Width="50" />
+                <TextBlock x:Name="Value9"  VerticalAlignment="Bottom" Width="50" />
+                <TextBlock x:Name="maxValue" HorizontalAlignment="Right" VerticalAlignment="Bottom" Width="50" />
+            </Grid>
+            <Canvas x:Name="ArrowOxCanvas" Grid.String="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Path x:Name="ArrowOxPath" Stroke="Black" StrokeThickness="1" VerticalAlignment="Top"/>
+            </Canvas>
+        </Grid> 
+    </Border>
+</UserControl>

@@ -68,15 +68,15 @@ namespace SignalLabelingApp.Views
 
             // Создаем три экземпляра OyControl
             var oyControl1 = new OyControl(){
-                Width = 70 
+                Width = 80 
             };
             var oyControl2 = new OyControl()
             {
-                Width = 70
+                Width = 80
             };
             var oyControl3 = new OyControl()
             {
-                Width = 70
+                Width = 80
             };
 
             Ch1Oy = oyControl1;
