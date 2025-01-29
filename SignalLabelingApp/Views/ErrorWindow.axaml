@@ -7,7 +7,7 @@
         WindowStartupLocation="CenterOwner"
         x:DataType="vm:ErrorWindowViewModel"
         CanResize="False"
-        Background="#f8f8f8">
+        Background="#FFFFFF">
     <StackPanel Margin="20">
         <TextBlock Text="{Binding ErrorMessage}" 
                    FontSize="16" Foreground="Red" 
