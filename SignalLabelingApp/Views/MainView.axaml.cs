@@ -12,20 +12,19 @@ namespace SignalLabelingApp.Views
 {
     public partial class MainView : UserControl
     {
+        private int classNumber = 0;
+
         public MainView()
         {
             InitializeComponent();
-            ClassNumberTextBox = this.FindControl<TextBox>("ClassNumberTextBox");
-            MarkupTypeComboBox = this.FindControl<ComboBox>("MarkupTypeComboBox");
-            AdaptiveSizeTextBox = this.FindControl<TextBox>("AdaptiveSizeTextBox");
-            SaveButton = this.FindControl<Button>("SaveButton");
-
             Globals.MainEditorControl = EditorZone;
             Globals.AllDatasetSamples.CollectionChanged += (_, __) => UpdateDatasetSamplesView();
 
             OpenFileMenuItem.PointerPressed += OpenFileMenuItem_PointerPressed;
             SaveMenuItem.PointerPressed += SaveMenuItem_PointerPressed;
             SaveButton.Click += OnSaveButtonClick;
+            IncreaseClassNumberButton.Click += OnIncreaseClassNumberClick;
+            DecreaseClassNumberButton.Click += OnDecreaseClassNumberClick;
         }
 
         private void OpenFileMenuItem_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
@@ -147,6 +146,21 @@ namespace SignalLabelingApp.Views
                 labelBlock.Children.Add(deleteButton);
 
                 CreatedLabels.Children.Add(border);
+            }
+        }
+
+        private void OnIncreaseClassNumberClick(object sender, RoutedEventArgs e)
+        {
+            classNumber++;
+            ClassNumberTextBox.Text = classNumber.ToString();
+        }
+
+        private void OnDecreaseClassNumberClick(object sender, RoutedEventArgs e)
+        {
+            if (classNumber > 0)
+            {
+                classNumber--;
+                ClassNumberTextBox.Text = classNumber.ToString();
             }
         }
     }

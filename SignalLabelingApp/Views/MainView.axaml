@@ -1,6 +1,32 @@
 <UserControl xmlns="https://github.com/avaloniaui"
             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
             x:Class="SignalLabelingApp.Views.MainView">
+    <UserControl.Styles>
+        <Style Selector="TextBlock">
+            <Setter Property="Foreground" Value="#333333"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style Selector="TextBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        <Style Selector="ComboBox">
+            <Setter Property="Background" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#CCCCCC"/>
+            <Setter Property="Padding" Value="5"/>
+        </Style>
+        <Style Selector="Button">
+            <Setter Property="Background" Value="#4CAF50"/>
+            <Setter Property="Foreground" Value="#FFFFFF"/>
+            <Setter Property="BorderBrush" Value="#4CAF50"/>
+            <Setter Property="Padding" Value="10"/>
+            <Setter Property="Margin" Value="0,20,0,0"/>
+        </Style>
+        <Style Selector="Border">
+            <Setter Property="CornerRadius" Value="5"/>
+        </Style>
+    </UserControl.Styles>
     <DockPanel LastChildFill="True">
         <!-- Меню (Menu bar) располагается под заголовком -->
         <Menu DockPanel.Dock="Top">
@@ -17,21 +43,25 @@
         </Menu>
 
         <!-- Левая панель для ввода данных и сохранения -->
-        <StackPanel DockPanel.Dock="Left" Width="250" Background="#F0F0F0" Margin="10">
+        <StackPanel DockPanel.Dock="Left" Width="250" Background="#F0F0F0" Margin="10" Opacity="0.9">
             <TextBlock Text="Class Number:" Margin="0,0,0,10" FontWeight="Bold"/>
-            <TextBox x:Name="ClassNumberTextBox" Margin="0,0,0,10" Background="#FFFFFF" BorderBrush="#CCCCCC"/>
+            <StackPanel Orientation="Horizontal" Margin="0,0,0,10">
+                <Button x:Name="DecreaseClassNumberButton" Content="-" Width="30"/>
+                <TextBox x:Name="ClassNumberTextBox" Width="50" IsReadOnly="True" Text="0" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                <Button x:Name="IncreaseClassNumberButton" Content="+" Width="30"/>
+            </StackPanel>
             
             <TextBlock Text="Markup Type:" Margin="0,0,0,10" FontWeight="Bold"/>
-            <ComboBox x:Name="MarkupTypeComboBox" Margin="0,0,0,10" Background="#FFFFFF" BorderBrush="#CCCCCC">
+            <ComboBox x:Name="MarkupTypeComboBox" Margin="0,0,0,10">
                 <ComboBoxItem Content="Classification"/>
                 <ComboBoxItem Content="Detection"/>
                 <ComboBoxItem Content="Segmentation"/>
             </ComboBox>
             
             <TextBlock Text="Adaptive Size:" Margin="0,0,0,10" FontWeight="Bold"/>
-            <TextBox x:Name="AdaptiveSizeTextBox" Margin="0,0,0,10" Background="#FFFFFF" BorderBrush="#CCCCCC"/>
+            <TextBox x:Name="AdaptiveSizeTextBox" Margin="0,0,0,10"/>
             
-            <Button x:Name="SaveButton" Content="Save" Margin="0,20,0,0" Background="#4CAF50" Foreground="#FFFFFF" BorderBrush="#4CAF50"/>
+            <Button x:Name="SaveButton" Content="Save"/>
         </StackPanel>
 
         <!-- Правая панель для списка меток (Created labels) -->
@@ -39,7 +69,8 @@
                 DockPanel.Dock="Right"
                 Background="#EEE"
                 Padding="10"
-                Width="250">
+                Width="250"
+                Opacity="0.9">
             <ScrollViewer VerticalScrollBarVisibility="Visible">
                 <StackPanel Orientation="Vertical" x:Name="CreatedLabels">
                 </StackPanel>
@@ -50,7 +81,8 @@
         <Grid>
             <Border x:Name="EditorZone" 
                 Background="#FFF"
-                Margin="10">
+                Margin="10"
+                Opacity="0.9">
             </Border>
         </Grid>
     </DockPanel>
