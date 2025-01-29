@@ -2,6 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using SignalLabelingApp.Classes;
+using static SignalLabelingApp.Views.OyControl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,7 +21,7 @@ namespace SignalLabelingApp.Views
     public partial class MiniseedEditor : EditorBase
     {
         public Canvas EditorCanvas;
-        public ScrollViewer EditorS�rollViewer;
+        public ScrollViewer EditorScrollViewer;
         public Slider ScaleXSlider;
 
         private Flyout settingsFlyout;
@@ -29,10 +30,17 @@ namespace SignalLabelingApp.Views
 
         public StationData currentStationData;
 
+        public OyControl Ch1Oy = null;
+        public OyControl Ch2Oy = null;
+        public OyControl Ch3Oy = null;
+
+        //public Grid mainGrid;
+
         public MiniseedEditor()
         {
             InitializeComponent();
         }
+
 
         public override void LoadFromFile(string filePath)
         {
@@ -42,26 +50,65 @@ namespace SignalLabelingApp.Views
 
         public void DrawSignalsFromMiniseed(MiniseedFile miniseedFile)
         {
-            Grid EditorGrid = new Grid
+
+            Grid GeneralGrid = new Grid
             {
                 IsHitTestVisible = true,
+                ColumnDefinitions = new ColumnDefinitions("Auto,*")
             };
+
+            Grid EditorGrid = new Grid{};
+
+            //mainGrid = EditorGrid;
+
+            var oyControlGrid = new Grid
+            {
+                RowDefinitions = new RowDefinitions("*,*,*") // Три строки для трех OyControl
+            };
+
+            // Создаем три экземпляра OyControl
+            var oyControl1 = new OyControl(){
+                Width = 70 
+            };
+            var oyControl2 = new OyControl()
+            {
+                Width = 70
+            };
+            var oyControl3 = new OyControl()
+            {
+                Width = 70
+            };
+
+            Ch1Oy = oyControl1;
+            Ch2Oy = oyControl2;
+            Ch3Oy = oyControl3;
+
+
+            // Добавляем OyControl в соответствующие строки
+            Grid.SetRow(oyControl1, 0);
+            Grid.SetRow(oyControl2, 1);
+            Grid.SetRow(oyControl3, 2);
+
+            oyControlGrid.Children.Add(oyControl1);
+            oyControlGrid.Children.Add(oyControl2);
+            oyControlGrid.Children.Add(oyControl3);
 
             var canvasScrollViewer = new ScrollViewer
             {
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Visible,
             };
-            EditorS�rollViewer = canvasScrollViewer;
 
-            var ChannelsPanel = new StackPanel
-            {
-                
+            EditorScrollViewer = canvasScrollViewer;
+            var canvas = new Canvas(){
+                HorizontalAlignment= HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
             };
 
             EditorCanvas = canvas;
             objectSelectionManager = new ObjectSelectionManager(EditorCanvas);
 
             var stationComboBox = new ComboBox();
+            
             foreach (StationData stationData in miniseedFile.stationDataStructures)
             {
                 ComboBoxItem item = new ComboBoxItem
@@ -85,6 +132,8 @@ namespace SignalLabelingApp.Views
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
                 Margin = new Thickness(10, 10, 10, 10)
             };
+
+
             scaleXSlider.PropertyChanged += ScaleXSlider_ValueChanged;
             ScaleXSlider = scaleXSlider;
 
@@ -128,14 +177,21 @@ namespace SignalLabelingApp.Views
             buttonPanel.Children.Add(settingsButton);
 
             stationComboBox.Margin = new Thickness(10, 10, 10, 10);
-            EditorS�rollViewer.Content = EditorCanvas;
+            EditorScrollViewer.Content = EditorCanvas;
 
-            EditorGrid.Children.Add(EditorS�rollViewer);
+            Grid.SetColumn(oyControlGrid, 0);
+            GeneralGrid.Children.Add(oyControlGrid);
+
+            EditorGrid.Children.Add(EditorScrollViewer);
+
             EditorGrid.Children.Add(buttonPanel);
             EditorGrid.Children.Add(stationComboBox);
             EditorGrid.Children.Add(scaleXSlider);
 
-            EditorBorder.Child = EditorGrid;
+            Grid.SetColumn(EditorGrid, 1);
+            GeneralGrid.Children.Add(EditorGrid);
+
+            EditorBorder.Child = GeneralGrid;
         }
 
         private Control CreateSettingsFlyoutContent()
@@ -216,13 +272,15 @@ namespace SignalLabelingApp.Views
         {
             if (e.Property == Slider.ValueProperty && e.NewValue is double newValue && e.OldValue is double oldValue)
             {
-                double previousOffsetX = EditorS�rollViewer.Offset.X;
+                double previousOffsetX = EditorScrollViewer.Offset.X;
                 objectSelectionManager.DrawScaleX = (float)newValue;
 
                 UpdateCanvasWidth();
 
                 double newOffsetX = previousOffsetX * (newValue / oldValue);
-                EditorS�rollViewer.Offset = new Vector(newOffsetX, EditorS�rollViewer.Offset.Y);
+                EditorScrollViewer.Offset = new Vector(newOffsetX, EditorScrollViewer.Offset.Y);
+
+                // UpdateOyControlValues();
 
             }
         }
@@ -257,13 +315,14 @@ namespace SignalLabelingApp.Views
 
                 RedrawVisibleSignal();
                 
-                EditorS�rollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+                EditorScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
             }
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             RedrawVisibleSignal();
+            // UpdateOyControlValues();
             //objectSelectionManager.RedrawObjectSelections();
         }
 
@@ -280,15 +339,130 @@ namespace SignalLabelingApp.Views
 
             EditorCanvas.Children.Add(stationComboBox);
 
-            double startX = EditorS�rollViewer.Offset.X;
-            double endX = startX + EditorS�rollViewer.Viewport.Width;
+            double startX = EditorScrollViewer.Offset.X;
+            double endX = startX + EditorScrollViewer.Viewport.Width;
 
             int channelHeight = (int)(EditorCanvas.Bounds.Height / 3);
 
-            RedrawOneChannel(0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
-            RedrawOneChannel(channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
-            RedrawOneChannel(2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
+            RedrawOneChannel(Ch1Oy, 0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
+            RedrawOneChannel(Ch2Oy, channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
+            RedrawOneChannel(Ch3Oy, 2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
+        
+        
         }
+
+        private void RedrawOneChannel(OyControl currentOyControl, int channelStartY, int channelHeight, TraceData trace, double startX, double endX, ImmutableSolidColorBrush brush)
+        {
+            if (trace == null || trace.data == null || trace.data.Count == 0)
+                return;
+
+            var polyline = new Polyline
+            {
+                Stroke = brush,
+                StrokeThickness = 1
+            };
+            var HorPolyline = new Polyline
+            {
+                Stroke = Brushes.Black,
+                StrokeThickness = 1
+            };
+
+            int startIndex = Math.Max(0, (int)(startX / objectSelectionManager.DrawScaleX));
+            int endIndex = Math.Min(trace.data.Count, (int)(endX / objectSelectionManager.DrawScaleX));
+
+            float maxValue = GetMaxInRange(trace, startIndex, endIndex); 
+            float minValue = GetMinInRange(trace, startIndex, endIndex);
+            float middleValue = (maxValue + minValue)/2;
+
+            if (maxValue == 0)
+                return;
+
+            float centerY = channelStartY + channelHeight / 2;
+
+            for (int i = startIndex; i < endIndex; i++)
+            {
+                float x = i * objectSelectionManager.DrawScaleX;
+                float y = centerY - (2 * (float)(trace.data[i] - minValue) / (maxValue - minValue) - 1) * ((float)(channelHeight) / 2 - 2); 
+
+                polyline.Points.Add(new Avalonia.Point(x, y));
+                HorPolyline.Points.Add(new Avalonia.Point(x, channelStartY + channelHeight));
+            }
+
+            EditorCanvas.Children.Add(polyline);
+            EditorCanvas.Children.Add(HorPolyline);
+
+            if (currentOyControl != null)
+            {
+                currentOyControl.MaxValue.Text = maxValue.ToString();
+                currentOyControl.MiddleValue.Text = middleValue.ToString();
+                currentOyControl.MinValue.Text = minValue.ToString();
+            }
+            
+        }
+
+        // private void UpdateOyControlValues()
+        // {
+        //     if (currentStationData == null || EditorCanvas == null)
+        //         return;
+
+        //     // Получаем значения для каждого канала
+        //     double maxValue1 = currentStationData.Channel1?.data?.Max() ?? 0;
+        //     double minValue1 = currentStationData.Channel1?.data?.Min() ?? 0;
+        //     double middleValue1 = (maxValue1 + minValue1) / 2;
+
+        //     double maxValue2 = currentStationData.Channel2?.data?.Max() ?? 0;
+        //     double minValue2 = currentStationData.Channel2?.data?.Min() ?? 0;
+        //     double middleValue2 = (maxValue2 + minValue2) / 2;
+
+        //     double maxValue3 = currentStationData.Channel3?.data?.Max() ?? 0;
+        //     double minValue3 = currentStationData.Channel3?.data?.Min() ?? 0;
+        //     double middleValue3 = (maxValue3 + minValue3) / 2;
+
+        //     // Обновляем значения в OyControl
+        //     var oyControls = ((EditorBorder.Child as Grid)?.Children[0] as Grid)?.Children.OfType<OyControl>().ToList();
+        //     if (oyControls != null && oyControls.Count >= 3)
+        //     {
+        //         oyControls[0].MaxValue.Text = maxValue1.ToString();
+        //         oyControls[0].MiddleValue.Text = middleValue1.ToString();
+        //         oyControls[0].MinValue.Text = minValue1.ToString();
+
+        //         oyControls[1].MaxValue.Text = maxValue2.ToString();
+        //         oyControls[1].MiddleValue.Text = middleValue2.ToString();
+        //         oyControls[1].MinValue.Text = minValue2.ToString();
+
+        //         oyControls[2].MaxValue.Text = maxValue3.ToString();
+        //         oyControls[2].MiddleValue.Text = middleValue3.ToString();
+        //         oyControls[2].MinValue.Text = minValue3.ToString();
+        //     }
+        // }
+        public static float GetMaxInRange(TraceData trace, int x1, int x2)
+        {
+            if (trace == null || trace.data == null || trace.data.Count == 0)
+                throw new ArgumentException("Trace data is null or empty.");
+
+            x1 = Math.Max(0, x1);
+            x2 = Math.Min(trace.data.Count, x2);
+
+            if (x1 >= x2)
+                throw new ArgumentException("Invalid range: x1 should be less than x2.");
+
+            return trace.data.Skip(x1).Take(x2 - x1).Max();
+        }
+
+        public static float GetMinInRange(TraceData trace, int x1, int x2)
+        {
+            if (trace == null || trace.data == null || trace.data.Count == 0)
+                throw new ArgumentException("Trace data is null or empty.");
+
+            x1 = Math.Max(0, x1);
+            x2 = Math.Min(trace.data.Count, x2);
+
+            if (x1 >= x2)
+                throw new ArgumentException("Invalid range: x1 should be less than x2.");
+
+            return trace.data.Skip(x1).Take(x2 - x1).Min();
+        }
+
 
     }
 }
