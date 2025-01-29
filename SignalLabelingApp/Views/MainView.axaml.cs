@@ -46,7 +46,7 @@ namespace SignalLabelingApp.Views
 
         }
 
-        private void UpdateDatasetSamplesView(/*object sender, RoutedEventArgs e*/)
+        private void UpdateDatasetSamplesView()
         {
             CreatedLabels.Children.Clear();
             
@@ -55,7 +55,7 @@ namespace SignalLabelingApp.Views
                 if (sample.Label == null) continue;
 
                 Label label = sample.Label;
-                
+
                 var labelBlock = new StackPanel
                 {
                     Orientation = Orientation.Vertical,
@@ -65,72 +65,70 @@ namespace SignalLabelingApp.Views
                 var border = new Border
                 {
                     BorderBrush = Brushes.Black, // Цвет рамки
-                    BorderThickness = new Thickness(1), // Толщина рамки  
+                    BorderThickness = new Thickness(1), // Толщина рамки     
                 };
 
                 border.Child = labelBlock;
 
+                var comboBox = new ComboBox
+                {
+                    SelectedIndex = 0,
+                    Margin = new Thickness(5),
+                    HorizontalAlignment = HorizontalAlignment.Stretch
+                };
+
+                // Добавляем кнопку удаления
+                var deleteButton = new Button
+                {
+                    Margin = new Thickness(5),
+                    HorizontalAlignment = HorizontalAlignment.Stretch,
+                    Content = "Delete",
+                };
+
+                // Подписываемся на событие нажатия на кнопку удаления
+                deleteButton.Click += (s, e) =>
+                {
+                    Globals.AllDatasetSamples.Remove(sample);
+                };
+
+                labelBlock.Children.Add(deleteButton);
+
                 if (label is SignalClassificationLabel classificationLabel)
                 {
-                    labelBlock.Children.Add(new TextBlock { Text = $"Type: Classification" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"Start: {classificationLabel.ObjectStartPos}" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"End: {classificationLabel.ObjectEndPos}" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"Class: {classificationLabel.ObjectClass}" });
+                    comboBox.Items.Add(new TextBlock { Text = $"Type: Classification\nStart: {classificationLabel.ObjectStartPos}\nEnd: {classificationLabel.ObjectEndPos}\nClass: {classificationLabel.ObjectClass}" });
+                    labelBlock.Children.Add(comboBox);
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Type: Classification" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Start: {classificationLabel.ObjectStartPos}" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"End: {classificationLabel.ObjectEndPos}" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Class: {classificationLabel.ObjectClass}" });
                 }
                 else if (label is SignalDetectionLabel detectionLabel)
                 {
-                    labelBlock.Children.Add(new TextBlock { Text = $"Type: Detection" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"Start: {detectionLabel.SignalStartPos}" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"End: {detectionLabel.SignalEndPos}" });
+                    comboBox.Items.Add(new TextBlock { Text = $"Type: Detection\nStart: {detectionLabel.SignalStartPos}\nEnd: {detectionLabel.SignalEndPos}" });
+                    labelBlock.Children.Add(comboBox);
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Type: Detection" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Start: {detectionLabel.SignalStartPos}" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"End: {detectionLabel.SignalEndPos}" });
 
                     foreach (var obj in detectionLabel.Objects)
                     {
-                        labelBlock.Children.Add(new TextBlock { Text = $"Object: Start={obj.X}\n, End={obj.W}, \nClass={obj.Class}" });
+                        comboBox.Items.Add(new TextBlock { Text = $"Objects:\nObj_start={obj.X}\nObj_end={obj.W}\nObj_class={obj.Class}" });
+
+                        //labelBlock.Children.Add(new TextBlock { Text = $"Objects: Obj_start={obj.X}\n, Obj_end={obj.W}, \nObj_class={obj.Class}" });
                     }
                 }
                 else if (label is SignalSegmentationLabel segmentationLabel)
                 {
-                    labelBlock.Children.Add(new TextBlock { Text = $"Type: Segmentation" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"Start: {segmentationLabel.ObjectStartPos}" });
-                    labelBlock.Children.Add(new TextBlock { Text = $"End: {segmentationLabel.ObjectEndPos}" });
+                    comboBox.Items.Add(new TextBlock { Text = $"Type: Segmentation\nStart: {segmentationLabel.ObjectStartPos}\nEnd: {segmentationLabel.ObjectEndPos}" });
+                    labelBlock.Children.Add(comboBox);
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Type: Segmentation" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"Start: {segmentationLabel.ObjectStartPos}" });
+                    //labelBlock.Children.Add(new TextBlock { Text = $"End: {segmentationLabel.ObjectEndPos}" });
                 }
 
-                //CreatedLabels.Children.Add(border);
-                //Button deleteButton = new Button { Content = "Удалить", Tag = elementPanel };
+                
 
-                // Добавление обработчика события для кнопки удаления
-                //deleteButton.Click += DeleteButton_Click;
-
-              
-                //elementPanel.Children.Add(deleteButton);
-                //elementCount++;
-                //private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Получение панели, содержащей кнопку удаления
-            /*Button deleteButton = (Button)sender;
-            StackPanel elementPanel = (StackPanel)deleteButton.Tag;
-
-            // Удаление элемента из стек-панели
-            editableStackPanel.Children.Remove(elementPanel);*/
-        }
-
-
-        // Добавляем кнопку удаления
-        var deleteButton = new Button
-        {
-            Content = "Delete",
-            Margin = new Thickness(5),
-        };
-
-        // Подписываемся на событие нажатия на кнопку удаления
-        deleteButton.Click += (s, e) =>
-        {
-            Globals.AllDatasetSamples.Remove(sample);
-        };
-
-        labelBlock.Children.Add(deleteButton);
-
-        CreatedLabels.Children.Add(border);
+                CreatedLabels.Children.Add(border);
                 
             }
         }
@@ -138,4 +136,3 @@ namespace SignalLabelingApp.Views
     }
     
 }
- 
