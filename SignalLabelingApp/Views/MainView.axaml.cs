@@ -8,7 +8,6 @@ using SignalLabelingApp.Classes;
 using System.Threading.Tasks;
 using Label = SignalLabelingApp.Classes.Label;
 
-
 namespace SignalLabelingApp.Views
 {
     public partial class MainView : UserControl
@@ -16,15 +15,17 @@ namespace SignalLabelingApp.Views
         public MainView()
         {
             InitializeComponent();
+            ClassNumberTextBox = this.FindControl<TextBox>("ClassNumberTextBox");
+            MarkupTypeComboBox = this.FindControl<ComboBox>("MarkupTypeComboBox");
+            AdaptiveSizeTextBox = this.FindControl<TextBox>("AdaptiveSizeTextBox");
+            SaveButton = this.FindControl<Button>("SaveButton");
+
             Globals.MainEditorControl = EditorZone;
-            //Globals.CurrentEditorMetadata = EditorMetadata;
             Globals.AllDatasetSamples.CollectionChanged += (_, __) => UpdateDatasetSamplesView();
-            
 
             OpenFileMenuItem.PointerPressed += OpenFileMenuItem_PointerPressed;
             SaveMenuItem.PointerPressed += SaveMenuItem_PointerPressed;
-
-
+            SaveButton.Click += OnSaveButtonClick;
         }
 
         private void OpenFileMenuItem_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)
@@ -38,24 +39,59 @@ namespace SignalLabelingApp.Views
         {
             string dirPath = Task.Run(async () => await FileSaverLoader.GetSaveDirPathAsync()).GetAwaiter().GetResult();
 
-            foreach(DatasetSample sample in Globals.AllDatasetSamples)
+            foreach (DatasetSample sample in Globals.AllDatasetSamples)
             {
                 string fileName = FileSaverLoader.GenerateUniqueFileName("sample", ".json", dirPath);
                 FileSaverLoader.SaveToJson<DatasetSample>(sample, fileName, dirPath);
             }
-
         }
 
-        private void UpdateDatasetSamplesView(/*object sender, RoutedEventArgs e*/)
+        private void OnSaveButtonClick(object sender, RoutedEventArgs e)
+        {
+            var classNumber = ClassNumberTextBox.Text;
+            var markupType = (MarkupTypeComboBox.SelectedItem as ComboBoxItem)?.Content.ToString();
+            var adaptiveSize = AdaptiveSizeTextBox.Text;
+
+            // Логика сохранения данных
+            SaveData(classNumber, markupType, adaptiveSize);
+        }
+
+        private void SaveData(string classNumber, string markupType, string adaptiveSize)
+        {
+            if (int.TryParse(classNumber, out int parsedClassNumber) && double.TryParse(adaptiveSize, out double parsedAdaptiveSize))
+            {
+                var newLabel = new SignalClassificationLabel
+                {
+                    ObjectClass = parsedClassNumber,
+                    MarkupType = markupType,
+                    AdaptiveSize = parsedAdaptiveSize
+                };
+
+                var newSample = new DatasetSample
+                {
+                    Label = newLabel
+                };
+
+                Globals.AllDatasetSamples.Add(newSample);
+            }
+            else
+            {
+                // Обработка ошибок ввода
+                var messageWindow = new MessageWindow("Please enter valid values for class number and adaptive size.");
+                messageWindow.Show();
+            }
+        }
+
+        private void UpdateDatasetSamplesView()
         {
             CreatedLabels.Children.Clear();
-            
+
             foreach (var sample in Globals.AllDatasetSamples)
             {
                 if (sample.Label == null) continue;
 
                 Label label = sample.Label;
-                
+
                 var labelBlock = new StackPanel
                 {
                     Orientation = Orientation.Vertical,
@@ -64,8 +100,8 @@ namespace SignalLabelingApp.Views
 
                 var border = new Border
                 {
-                    BorderBrush = Brushes.Black, // Цвет рамки
-                    BorderThickness = new Thickness(1), // Толщина рамки  
+                    BorderBrush = Brushes.Black,
+                    BorderThickness = new Thickness(1),
                 };
 
                 border.Child = labelBlock;
@@ -76,6 +112,8 @@ namespace SignalLabelingApp.Views
                     labelBlock.Children.Add(new TextBlock { Text = $"Start: {classificationLabel.ObjectStartPos}" });
                     labelBlock.Children.Add(new TextBlock { Text = $"End: {classificationLabel.ObjectEndPos}" });
                     labelBlock.Children.Add(new TextBlock { Text = $"Class: {classificationLabel.ObjectClass}" });
+                    labelBlock.Children.Add(new TextBlock { Text = $"Markup Type: {classificationLabel.MarkupType}" });
+                    labelBlock.Children.Add(new TextBlock { Text = $"Adaptive Size: {classificationLabel.AdaptiveSize}" });
                 }
                 else if (label is SignalDetectionLabel detectionLabel)
                 {
@@ -85,7 +123,7 @@ namespace SignalLabelingApp.Views
 
                     foreach (var obj in detectionLabel.Objects)
                     {
-                        labelBlock.Children.Add(new TextBlock { Text = $"Object: Start={obj.X}\n, End={obj.W}, \nClass={obj.Class}" });
+                        labelBlock.Children.Add(new TextBlock { Text = $"Object: Start={obj.X}, End={obj.W}, Class={obj.Class}" });
                     }
                 }
                 else if (label is SignalSegmentationLabel segmentationLabel)
@@ -95,47 +133,21 @@ namespace SignalLabelingApp.Views
                     labelBlock.Children.Add(new TextBlock { Text = $"End: {segmentationLabel.ObjectEndPos}" });
                 }
 
-                //CreatedLabels.Children.Add(border);
-                //Button deleteButton = new Button { Content = "Удалить", Tag = elementPanel };
+                var deleteButton = new Button
+                {
+                    Content = "Delete",
+                    Margin = new Thickness(5),
+                };
 
-                // Добавление обработчика события для кнопки удаления
-                //deleteButton.Click += DeleteButton_Click;
+                deleteButton.Click += (s, e) =>
+                {
+                    Globals.AllDatasetSamples.Remove(sample);
+                };
 
-              
-                //elementPanel.Children.Add(deleteButton);
-                //elementCount++;
-                //private void DeleteButton_Click(object sender, RoutedEventArgs e)
-        {
-            // Получение панели, содержащей кнопку удаления
-            /*Button deleteButton = (Button)sender;
-            StackPanel elementPanel = (StackPanel)deleteButton.Tag;
+                labelBlock.Children.Add(deleteButton);
 
-            // Удаление элемента из стек-панели
-            editableStackPanel.Children.Remove(elementPanel);*/
-        }
-
-
-        // Добавляем кнопку удаления
-        var deleteButton = new Button
-        {
-            Content = "Delete",
-            Margin = new Thickness(5),
-        };
-
-        // Подписываемся на событие нажатия на кнопку удаления
-        deleteButton.Click += (s, e) =>
-        {
-            Globals.AllDatasetSamples.Remove(sample);
-        };
-
-        labelBlock.Children.Add(deleteButton);
-
-        CreatedLabels.Children.Add(border);
-                
+                CreatedLabels.Children.Add(border);
             }
         }
-
     }
-    
 }
- 

@@ -42,22 +42,17 @@ namespace SignalLabelingApp.Classes
         }
     }
 
-
-    
-
-
     public class MiniseedFile
     {
         public string filePath = null;
         public int stationsAmount = 0;
         public ObservableCollection<StationData> stationDataStructures = new ObservableCollection<StationData>();
-
     }
 
     public class StationData
     {
         public string StationName;
-        public TraceData Channel1 {  get; set; }
+        public TraceData Channel1 { get; set; }
         public TraceData Channel2 { get; set; }
         public TraceData Channel3 { get; set; }
     }
@@ -109,6 +104,8 @@ namespace SignalLabelingApp.Classes
         public double ObjectStartPos;
         public double ObjectEndPos;
         public double ObjectClass { get; set; }
+        public string MarkupType { get; set; } // Добавьте это свойство
+        public double AdaptiveSize { get; set; } // Добавьте это свойство
     }
 
     public class SignalDetectionLabel : Label
