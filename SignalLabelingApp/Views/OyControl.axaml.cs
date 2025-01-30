@@ -47,10 +47,10 @@ namespace SignalLabelingApp.Views
         {
             double canvasWidth = ArrowCanvas.Bounds.Width;
             double canvasHeight = ArrowCanvas.Bounds.Height;
-            double arrowWidth = canvasWidth * 0.1; // 10% of canvas width
+            double arrowWidth = canvasWidth * 0.2; // 10% of canvas width
             double arrowHeight = canvasHeight;
 
-            var geometryGroup = new GeometryGroup
+        var geometryGroup = new GeometryGroup
             {
                 Children = new GeometryCollection
                 {
@@ -60,47 +60,13 @@ namespace SignalLabelingApp.Views
                     new LineGeometry(new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.1), new Point(canvasWidth / 2, 0)),
 
                     // Узкие деления
-                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.05), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.05)),
+                    
                     new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.5), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.5)),
-                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.95), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.95))
+                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 1), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 1)),
                 }
             };
 
             ArrowPath.Data = geometryGroup;
-        }
-    }
-    public class CanvasSizeToLineGeometryConverter : IMultiValueConverter
-    {
-        public object Convert(IList<object> values, Type targetType, object parameter, CultureInfo culture)
-        {
-            if (values.Count < 2 || !(values[0] is double canvasWidth) || !(values[1] is double canvasHeight))
-                return null;
-
-            double arrowWidth = canvasWidth * 0.1; // 10% of canvas width
-            double arrowHeight = canvasHeight;
-
-            var geometryGroup = new GeometryGroup
-            {
-                Children = new GeometryCollection
-                {
-                    // Вертикальная стрелка
-                    new LineGeometry(new Point(canvasWidth / 2, 0), new Point(canvasWidth / 2, arrowHeight)),
-                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.1), new Point(canvasWidth / 2, 0)),
-                    new LineGeometry(new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.1), new Point(canvasWidth / 2, 0)),
-
-                    // Узкие деления
-                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.2), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.2)),
-                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.5), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.5)),
-                    new LineGeometry(new Point(canvasWidth / 2 - arrowWidth / 2, arrowHeight * 0.8), new Point(canvasWidth / 2 + arrowWidth / 2, arrowHeight * 0.8))
-                }
-            };
-
-            return geometryGroup;
-        }
-
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
         }
     }
 }

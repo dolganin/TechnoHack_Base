@@ -2,7 +2,7 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using SignalLabelingApp.Classes;
-using static SignalLabelingApp.Views.OyControl;
+// using SignalLabelingApp.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -34,6 +34,8 @@ namespace SignalLabelingApp.Views
         public OyControl Ch2Oy = null;
         public OyControl Ch3Oy = null;
 
+        public OxControl Ox = null; 
+
         //public Grid mainGrid;
 
         public MiniseedEditor()
@@ -54,7 +56,10 @@ namespace SignalLabelingApp.Views
             Grid GeneralGrid = new Grid
             {
                 IsHitTestVisible = true,
-                ColumnDefinitions = new ColumnDefinitions("Auto,*")
+                ColumnDefinitions = new ColumnDefinitions("Auto *"),
+                RowDefinitions = new RowDefinitions("* 40"),
+            Background = new SolidColorBrush(Color.Parse("#EEE"))
+
             };
 
             Grid EditorGrid = new Grid{};
@@ -82,7 +87,14 @@ namespace SignalLabelingApp.Views
             Ch1Oy = oyControl1;
             Ch2Oy = oyControl2;
             Ch3Oy = oyControl3;
+            
 
+            var oxControl = new OxControl()
+            {
+            
+            };
+
+            Ox = oxControl;
 
             // Добавляем OyControl в соответствующие строки
             Grid.SetRow(oyControl1, 0);
@@ -180,7 +192,12 @@ namespace SignalLabelingApp.Views
             EditorScrollViewer.Content = EditorCanvas;
 
             Grid.SetColumn(oyControlGrid, 0);
+            Grid.SetRow(oyControlGrid, 0);
             GeneralGrid.Children.Add(oyControlGrid);
+
+            Grid.SetColumn(oxControl, 1);
+            Grid.SetRow(oxControl, 1);
+            GeneralGrid.Children.Add(oxControl);
 
             EditorGrid.Children.Add(EditorScrollViewer);
 
@@ -189,6 +206,7 @@ namespace SignalLabelingApp.Views
             EditorGrid.Children.Add(scaleXSlider);
 
             Grid.SetColumn(EditorGrid, 1);
+            Grid.SetRow(EditorGrid, 0);
             GeneralGrid.Children.Add(EditorGrid);
 
             EditorBorder.Child = GeneralGrid;
@@ -347,8 +365,48 @@ namespace SignalLabelingApp.Views
             RedrawOneChannel(Ch1Oy, 0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
             RedrawOneChannel(Ch2Oy, channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
             RedrawOneChannel(Ch3Oy, 2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
-        
-        
+            RedrawOx(Ox, currentStationData.Channel1, startX, endX);
+
+
+        }
+
+        private void RedrawOx(OxControl currentOxControl, TraceData trace, double startX, double endX)
+        {
+
+            int startIndex = Math.Max(0, (int)(startX / objectSelectionManager.DrawScaleX));
+            int endIndex = Math.Min(trace.data.Count, (int)(endX / objectSelectionManager.DrawScaleX));
+
+            float minIndex = startIndex;
+            float Index1 = (float)((startIndex + endIndex) * 0.1);
+            float Index2 = (float)((startIndex + endIndex) * 0.2);
+            float Index3 = (float)((startIndex + endIndex) * 0.3);
+            float Index4 = (float)((startIndex + endIndex) * 0.4);
+            float middleIndex = (float)((startIndex + endIndex) / 2);
+            float Index6 = (float)((startIndex + endIndex) * 0.6);
+            float Index7 = (float)((startIndex + endIndex) * 0.7);
+            float Index8 = (float)((startIndex + endIndex) * 0.8);
+            float Index9 = (float)((startIndex + endIndex) * 0.9);
+            float maxIndex = (float)(endIndex);
+
+            if (maxIndex == 0)
+                return;
+
+            if (currentOxControl != null)
+            {
+
+                currentOxControl.MinIndex.Text = minIndex.ToString();
+                currentOxControl.Index1.Text = Index1.ToString();
+                currentOxControl.Index2.Text = Index2.ToString();
+                currentOxControl.Index3.Text = Index3.ToString();
+                currentOxControl.Index4.Text = Index4.ToString();
+                currentOxControl.MiddleIndex.Text = middleIndex.ToString();
+                currentOxControl.Index6.Text = Index6.ToString();
+                currentOxControl.Index7.Text = Index7.ToString();
+                currentOxControl.Index8.Text = Index8.ToString();
+                currentOxControl.Index9.Text = Index9.ToString();
+                currentOxControl.MaxIndex.Text = maxIndex.ToString();
+            }
+
         }
 
         private void RedrawOneChannel(OyControl currentOyControl, int channelStartY, int channelHeight, TraceData trace, double startX, double endX, ImmutableSolidColorBrush brush)
@@ -374,6 +432,8 @@ namespace SignalLabelingApp.Views
             float minValue = GetMinInRange(trace, startIndex, endIndex);
             float middleValue = (maxValue + minValue)/2;
 
+            
+
             if (maxValue == 0)
                 return;
 
@@ -397,44 +457,9 @@ namespace SignalLabelingApp.Views
                 currentOyControl.MiddleValue.Text = middleValue.ToString();
                 currentOyControl.MinValue.Text = minValue.ToString();
             }
-            
+
         }
 
-        // private void UpdateOyControlValues()
-        // {
-        //     if (currentStationData == null || EditorCanvas == null)
-        //         return;
-
-        //     // Получаем значения для каждого канала
-        //     double maxValue1 = currentStationData.Channel1?.data?.Max() ?? 0;
-        //     double minValue1 = currentStationData.Channel1?.data?.Min() ?? 0;
-        //     double middleValue1 = (maxValue1 + minValue1) / 2;
-
-        //     double maxValue2 = currentStationData.Channel2?.data?.Max() ?? 0;
-        //     double minValue2 = currentStationData.Channel2?.data?.Min() ?? 0;
-        //     double middleValue2 = (maxValue2 + minValue2) / 2;
-
-        //     double maxValue3 = currentStationData.Channel3?.data?.Max() ?? 0;
-        //     double minValue3 = currentStationData.Channel3?.data?.Min() ?? 0;
-        //     double middleValue3 = (maxValue3 + minValue3) / 2;
-
-        //     // Обновляем значения в OyControl
-        //     var oyControls = ((EditorBorder.Child as Grid)?.Children[0] as Grid)?.Children.OfType<OyControl>().ToList();
-        //     if (oyControls != null && oyControls.Count >= 3)
-        //     {
-        //         oyControls[0].MaxValue.Text = maxValue1.ToString();
-        //         oyControls[0].MiddleValue.Text = middleValue1.ToString();
-        //         oyControls[0].MinValue.Text = minValue1.ToString();
-
-        //         oyControls[1].MaxValue.Text = maxValue2.ToString();
-        //         oyControls[1].MiddleValue.Text = middleValue2.ToString();
-        //         oyControls[1].MinValue.Text = minValue2.ToString();
-
-        //         oyControls[2].MaxValue.Text = maxValue3.ToString();
-        //         oyControls[2].MiddleValue.Text = middleValue3.ToString();
-        //         oyControls[2].MinValue.Text = minValue3.ToString();
-        //     }
-        // }
         public static float GetMaxInRange(TraceData trace, int x1, int x2)
         {
             if (trace == null || trace.data == null || trace.data.Count == 0)

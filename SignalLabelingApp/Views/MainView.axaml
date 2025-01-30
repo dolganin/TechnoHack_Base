@@ -61,22 +61,16 @@
 			<!-- Центральная область под редактор (Editor).
              Поскольку LastChildFill=True, 
              этот элемент автоматически заполняет оставшееся пространство. -->
-			<Grid RowDefinitions="* 0.1*">
+			<Grid>
 				<Border x:Name="EditorZone" 
-					Grid.Row="0"
 					Background="#FFF"
-						Margin="10"
+					Margin="5"
+					VerticalAlignment="Stretch"
 						>
+				
+				
 				</Border>
 
-				<!-- Нижняя панель для “Editor metadata and additional info” -->
-				<!--<Border x:Name="EditorMetadata"
-					Grid.Row="1"
-					DockPanel.Dock="Bottom"
-						Background="#F2F2F2"
-						Padding="10">
-
-				</Border>-->
 			</Grid>
 
 		</DockPanel>
