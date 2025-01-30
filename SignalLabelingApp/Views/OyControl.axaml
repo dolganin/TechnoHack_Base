@@ -1,32 +1,19 @@
 <UserControl xmlns="https://github.com/avaloniaui"
       xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:SignalLabelingApp.Views"
       x:Class="SignalLabelingApp.Views.OyControl">
 
-    <Border Background="#CCCCCC">
+
+    <Border Background="#EEE" BorderBrush="Black" BorderThickness="0 0 0 2">
         <Grid ColumnDefinitions="Auto *"> 
-            <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
-                <Canvas x:Name="ArrowCanvas" HorizontalAlignment="Right" VerticalAlignment="Stretch">
-                    <Path Stroke="Black" StrokeThickness="1">
-                        <Path.Data>
-                            <GeometryGroup>
-                                <!-- Вертикальная стрелка -->
-                                <LineGeometry StartPoint="10,0" EndPoint="10,150"/>
-                                <LineGeometry StartPoint="5,10" EndPoint="10,0"/>
-                                <LineGeometry StartPoint="15,10" EndPoint="10,0"/>
-                                
-                                <!-- Узкие деления -->
-                                <LineGeometry StartPoint="5,20" EndPoint="15,20"/>
-                                <LineGeometry StartPoint="5,75" EndPoint="15,75"/>
-                                <LineGeometry StartPoint="5,130" EndPoint="15,130"/>
-                            </GeometryGroup>
-                        </Path.Data>
-                    </Path>
-                </Canvas>
-                <TextBlock x:Name="MaxValue" HorizontalAlignment="Left" VerticalAlignment="Top"/>
-                <TextBlock x:Name="MiddleValue" HorizontalAlignment="Left" VerticalAlignment="Center"/>
-                <TextBlock x:Name="MinValue" HorizontalAlignment="Left" VerticalAlignment="Bottom"/>
+            <Grid Grid.Column="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+                <TextBlock x:Name="MaxValue" HorizontalAlignment="Left" VerticalAlignment="Top"  Width="50" FontSize="12" />
+                <TextBlock x:Name="MiddleValue" HorizontalAlignment="Left" VerticalAlignment="Center" Width="50" FontSize="12" />
+                <TextBlock x:Name="MinValue" HorizontalAlignment="Left" VerticalAlignment="Bottom" Width="50" FontSize="12"/>
             </Grid>
-            <Canvas x:Name="OneChannelCanvas" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"/>
+            <Canvas x:Name="ArrowCanvas" Grid.Column="1" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Path x:Name="ArrowPath" Stroke="Black" StrokeThickness="2" HorizontalAlignment="Right"/>
+            </Canvas>
         </Grid> 
     </Border>
 </UserControl>

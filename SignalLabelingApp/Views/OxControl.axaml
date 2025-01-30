@@ -1,0 +1,40 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+      xmlns:local="clr-namespace:SignalLabelingApp.Views"
+      x:Class="SignalLabelingApp.Views.OxControl">
+
+
+    <Border Background="#EEE">
+         <Grid RowDefinitions=" * Auto ">
+            <Canvas x:Name="ArrowOxCanvas" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                <Path x:Name="ArrowOxPath" Stroke="Black" StrokeThickness="2" VerticalAlignment="Top"/>
+            </Canvas> 
+            <Grid Grid.Row="1" HorizontalAlignment="Stretch" VerticalAlignment="Bottom">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="60"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="60"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock x:Name="MinIndex" Grid.Column="0" HorizontalAlignment="Left" VerticalAlignment="Bottom" FontSize="12" />
+                <TextBlock x:Name="Index1" Grid.Column="1" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index2" Grid.Column="2" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index3" Grid.Column="3" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index4" Grid.Column="4" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="MiddleIndex" Grid.Column="5" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index6" Grid.Column="6" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index7" Grid.Column="7" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index8" Grid.Column="8" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="Index9" Grid.Column="9" HorizontalAlignment="Center" VerticalAlignment="Bottom" FontSize="12"/>
+                <TextBlock x:Name="MaxIndex" Grid.Column="10" HorizontalAlignment="Right" VerticalAlignment="Bottom" FontSize="12"/>
+            </Grid>
+         </Grid>
+    </Border>
+</UserControl>
