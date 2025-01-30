@@ -7,6 +7,7 @@ using Avalonia.Interactivity;
 using SignalLabelingApp.Classes;
 using System.Threading.Tasks;
 using Label = SignalLabelingApp.Classes.Label;
+using System.Collections.Generic;
 
 
 namespace SignalLabelingApp.Views
@@ -95,31 +96,41 @@ namespace SignalLabelingApp.Views
 
                 if (label is SignalClassificationLabel classificationLabel)
                 {
-                    comboBox.Items.Add(new TextBlock { Text = $"Type: Classification\nStart: {classificationLabel.ObjectStartPos}\nEnd: {classificationLabel.ObjectEndPos}\nClass: {classificationLabel.ObjectClass}" });
+                    var EventID = classificationLabel.EventID;
+                    
+
+                    comboBox.Items.Add(new TextBlock { Text = $"Type: Classification \n Event_ID {classificationLabel.EventID}\nStart: \nEnd {classificationLabel.ObjectStartPos}\nEnd: {classificationLabel.ObjectEndPos}\nClass: {classificationLabel.ObjectClass}" });
                     labelBlock.Children.Add(comboBox);
                     //labelBlock.Children.Add(new TextBlock { Text = $"Type: Classification" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Start: {classificationLabel.ObjectStartPos}" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"End: {classificationLabel.ObjectEndPos}" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Class: {classificationLabel.ObjectClass}" });
+
+        
+
                 }
                 else if (label is SignalDetectionLabel detectionLabel)
                 {
-                    comboBox.Items.Add(new TextBlock { Text = $"Type: Detection\nStart: {detectionLabel.SignalStartPos}\nEnd: {detectionLabel.SignalEndPos}" });
+                    var EventID = detectionLabel.EventID;
+                    comboBox.Items.Add(new TextBlock { Text = $"Type: Detection \n Event_ID: {detectionLabel.EventID}\nStart: {detectionLabel.SignalStartPos}\nEnd: {detectionLabel.SignalEndPos}" });
                     labelBlock.Children.Add(comboBox);
                     //labelBlock.Children.Add(new TextBlock { Text = $"Type: Detection" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Start: {detectionLabel.SignalStartPos}" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"End: {detectionLabel.SignalEndPos}" });
 
-                    foreach (var obj in detectionLabel.Objects)
+                    foreach (var keyValuePair in detectionLabel.Objects)
                     {
-                        comboBox.Items.Add(new TextBlock { Text = $"Objects:\nObj_start={obj.X}\nObj_end={obj.W}\nObj_class={obj.Class}" });
+                        var ObjID = keyValuePair.Key; 
+                        DetectionObject obj = keyValuePair.Value;
+                        comboBox.Items.Add(new TextBlock { Text =  $"  Objects:\nObjID={ObjID}\nObj_start={obj.X}\nObj_end={obj.W}\nObj_class={obj.Class}"} );
 
                         //labelBlock.Children.Add(new TextBlock { Text = $"Objects: Obj_start={obj.X}\n, Obj_end={obj.W}, \nObj_class={obj.Class}" });
                     }
                 }
                 else if (label is SignalSegmentationLabel segmentationLabel)
                 {
-                    comboBox.Items.Add(new TextBlock { Text = $"Type: Segmentation\nStart: {segmentationLabel.ObjectStartPos}\nEnd: {segmentationLabel.ObjectEndPos}" });
+                    var EventID = segmentationLabel.EventID;
+                    comboBox.Items.Add(new TextBlock { Text = $"Type: Segmentation\n Event_ID: {segmentationLabel.EventID}\nStart: {segmentationLabel.ObjectStartPos}\nEnd: {segmentationLabel.ObjectEndPos}" });
                     labelBlock.Children.Add(comboBox);
                     //labelBlock.Children.Add(new TextBlock { Text = $"Type: Segmentation" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Start: {segmentationLabel.ObjectStartPos}" });
