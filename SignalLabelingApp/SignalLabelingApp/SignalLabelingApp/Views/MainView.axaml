@@ -1,0 +1,47 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+			xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+			x:Class="SignalLabelingApp.Views.MainView"
+>
+
+		<DockPanel LastChildFill="True">
+
+
+			<Menu DockPanel.Dock="Top">
+				<MenuItem Header="_File">
+					<MenuItem x:Name="OpenFileMenuItem" Header="Open"/>
+					<MenuItem x:Name="SaveMenuItem" Header="Save dataset"/>
+					<MenuItem Header="Exit"/>
+				</MenuItem>
+				
+				<MenuItem Header="_Edit">
+					<MenuItem Header="Undo"/>
+					<MenuItem Header="Redo"/>
+				</MenuItem>
+			</Menu>
+
+
+			<Border x:Name="CreatedLabelsBorder"
+				    DockPanel.Dock="Right"
+					Background="#EEE"
+					Padding="10"
+					Width="200">
+				<ScrollViewer VerticalScrollBarVisibility="Visible">
+						<StackPanel Orientation="Vertical" x:Name="CreatedLabels">
+					</StackPanel>
+				</ScrollViewer>
+			</Border>
+
+			<Grid RowDefinitions="* 0.1*">
+				<Border x:Name="EditorZone" 
+					Grid.Row="0"
+					Background="#FFF"
+						Margin="10"
+						>
+				</Border>
+
+			</Grid>
+
+		</DockPanel>
+
+
+</UserControl>

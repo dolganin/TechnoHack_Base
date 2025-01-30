@@ -2,7 +2,6 @@ using Avalonia.Controls;
 using Avalonia.Input;
 using Avalonia.Media;
 using SignalLabelingApp.Classes;
-using static SignalLabelingApp.Views.OyControl;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -21,7 +20,7 @@ namespace SignalLabelingApp.Views
     public partial class MiniseedEditor : EditorBase
     {
         public Canvas EditorCanvas;
-        public ScrollViewer EditorScrollViewer;
+        public ScrollViewer EditorSÒrollViewer;
         public Slider ScaleXSlider;
 
         private Flyout settingsFlyout;
@@ -30,17 +29,10 @@ namespace SignalLabelingApp.Views
 
         public StationData currentStationData;
 
-        public OyControl Ch1Oy = null;
-        public OyControl Ch2Oy = null;
-        public OyControl Ch3Oy = null;
-
-        //public Grid mainGrid;
-
         public MiniseedEditor()
         {
             InitializeComponent();
         }
-
 
         public override void LoadFromFile(string filePath)
         {
@@ -50,65 +42,26 @@ namespace SignalLabelingApp.Views
 
         public void DrawSignalsFromMiniseed(MiniseedFile miniseedFile)
         {
-
-            Grid GeneralGrid = new Grid
+            Grid EditorGrid = new Grid
             {
                 IsHitTestVisible = true,
-                ColumnDefinitions = new ColumnDefinitions("Auto,*")
             };
-
-            Grid EditorGrid = new Grid{};
-
-            //mainGrid = EditorGrid;
-
-            var oyControlGrid = new Grid
-            {
-                RowDefinitions = new RowDefinitions("*,*,*") // –¢—Ä–∏ —Å—Ç—Ä–æ–∫–∏ –¥–ª—è —Ç—Ä–µ—Ö OyControl
-            };
-
-            // –°–æ–∑–¥–∞–µ–º —Ç—Ä–∏ —ç–∫–∑–µ–º–ø–ª—è—Ä–∞ OyControl
-            var oyControl1 = new OyControl(){
-                Width = 70 
-            };
-            var oyControl2 = new OyControl()
-            {
-                Width = 70
-            };
-            var oyControl3 = new OyControl()
-            {
-                Width = 70
-            };
-
-            Ch1Oy = oyControl1;
-            Ch2Oy = oyControl2;
-            Ch3Oy = oyControl3;
-
-
-            // –î–æ–±–∞–≤–ª—è–µ–º OyControl –≤ —Å–æ–æ—Ç–≤–µ—Ç—Å—Ç–≤—É—é—â–∏–µ —Å—Ç—Ä–æ–∫–∏
-            Grid.SetRow(oyControl1, 0);
-            Grid.SetRow(oyControl2, 1);
-            Grid.SetRow(oyControl3, 2);
-
-            oyControlGrid.Children.Add(oyControl1);
-            oyControlGrid.Children.Add(oyControl2);
-            oyControlGrid.Children.Add(oyControl3);
 
             var canvasScrollViewer = new ScrollViewer
             {
                 HorizontalScrollBarVisibility = ScrollBarVisibility.Visible,
             };
+            EditorSÒrollViewer = canvasScrollViewer;
 
-            EditorScrollViewer = canvasScrollViewer;
-            var canvas = new Canvas(){
-                HorizontalAlignment= HorizontalAlignment.Stretch,
-                VerticalAlignment = VerticalAlignment.Stretch,
+            var canvas = new Canvas
+            {
+                Background = Brushes.LightGray
             };
 
             EditorCanvas = canvas;
             objectSelectionManager = new ObjectSelectionManager(EditorCanvas);
 
             var stationComboBox = new ComboBox();
-            
             foreach (StationData stationData in miniseedFile.stationDataStructures)
             {
                 ComboBoxItem item = new ComboBoxItem
@@ -132,8 +85,6 @@ namespace SignalLabelingApp.Views
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
                 Margin = new Thickness(10, 10, 10, 10)
             };
-
-
             scaleXSlider.PropertyChanged += ScaleXSlider_ValueChanged;
             ScaleXSlider = scaleXSlider;
 
@@ -177,21 +128,14 @@ namespace SignalLabelingApp.Views
             buttonPanel.Children.Add(settingsButton);
 
             stationComboBox.Margin = new Thickness(10, 10, 10, 10);
-            EditorScrollViewer.Content = EditorCanvas;
+            EditorSÒrollViewer.Content = EditorCanvas;
 
-            Grid.SetColumn(oyControlGrid, 0);
-            GeneralGrid.Children.Add(oyControlGrid);
-
-            EditorGrid.Children.Add(EditorScrollViewer);
-
+            EditorGrid.Children.Add(EditorSÒrollViewer);
             EditorGrid.Children.Add(buttonPanel);
             EditorGrid.Children.Add(stationComboBox);
             EditorGrid.Children.Add(scaleXSlider);
 
-            Grid.SetColumn(EditorGrid, 1);
-            GeneralGrid.Children.Add(EditorGrid);
-
-            EditorBorder.Child = GeneralGrid;
+            EditorBorder.Child = EditorGrid;
         }
 
         private Control CreateSettingsFlyoutContent()
@@ -245,10 +189,10 @@ namespace SignalLabelingApp.Views
             };
             adaptiveSizeTextBox.AddHandler(TextInputEvent, (sender, e) =>
             {
-                // ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ, ÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ
+                // œÓ‚ÂˇÂÏ, ˜ÚÓ ‚‚Ó‰ËÏÓÂ ÁÌ‡˜ÂÌËÂ ó ˆËÙ‡
                 if (!int.TryParse(e.Text, out _))
                 {
-                    e.Handled = true; // ÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩ, ÔøΩÔøΩÔøΩÔøΩ ÔøΩÔøΩÔøΩ ÔøΩÔøΩ ÔøΩÔøΩÔøΩÔøΩÔøΩ
+                    e.Handled = true; // «‡ÔÂ˘‡ÂÏ ‚‚Ó‰, ÂÒÎË ˝ÚÓ ÌÂ ˜ËÒÎÓ
                 }
             }, RoutingStrategies.Tunnel);
             adaptiveSizeTextBox.PropertyChanged += (sender, e) =>
@@ -272,15 +216,13 @@ namespace SignalLabelingApp.Views
         {
             if (e.Property == Slider.ValueProperty && e.NewValue is double newValue && e.OldValue is double oldValue)
             {
-                double previousOffsetX = EditorScrollViewer.Offset.X;
+                double previousOffsetX = EditorSÒrollViewer.Offset.X;
                 objectSelectionManager.DrawScaleX = (float)newValue;
 
                 UpdateCanvasWidth();
 
                 double newOffsetX = previousOffsetX * (newValue / oldValue);
-                EditorScrollViewer.Offset = new Vector(newOffsetX, EditorScrollViewer.Offset.Y);
-
-                // UpdateOyControlValues();
+                EditorSÒrollViewer.Offset = new Vector(newOffsetX, EditorSÒrollViewer.Offset.Y);
 
             }
         }
@@ -315,14 +257,13 @@ namespace SignalLabelingApp.Views
 
                 RedrawVisibleSignal();
                 
-                EditorScrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
+                EditorSÒrollViewer.ScrollChanged += ScrollViewer_ScrollChanged;
             }
         }
 
         private void ScrollViewer_ScrollChanged(object sender, ScrollChangedEventArgs e)
         {
             RedrawVisibleSignal();
-            // UpdateOyControlValues();
             //objectSelectionManager.RedrawObjectSelections();
         }
 
@@ -339,19 +280,17 @@ namespace SignalLabelingApp.Views
 
             EditorCanvas.Children.Add(stationComboBox);
 
-            double startX = EditorScrollViewer.Offset.X;
-            double endX = startX + EditorScrollViewer.Viewport.Width;
+            double startX = EditorSÒrollViewer.Offset.X;
+            double endX = startX + EditorSÒrollViewer.Viewport.Width;
 
             int channelHeight = (int)(EditorCanvas.Bounds.Height / 3);
 
-            RedrawOneChannel(Ch1Oy, 0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
-            RedrawOneChannel(Ch2Oy, channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
-            RedrawOneChannel(Ch3Oy, 2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
-        
-        
+            RedrawOneChannel(0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
+            RedrawOneChannel(channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
+            RedrawOneChannel(2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
         }
 
-        private void RedrawOneChannel(OyControl currentOyControl, int channelStartY, int channelHeight, TraceData trace, double startX, double endX, ImmutableSolidColorBrush brush)
+        private void RedrawOneChannel(int channelStartY, int channelHeight, TraceData trace, double startX, double endX, ImmutableSolidColorBrush brush)
         {
             if (trace == null || trace.data == null || trace.data.Count == 0)
                 return;
@@ -372,7 +311,6 @@ namespace SignalLabelingApp.Views
 
             float maxValue = GetMaxInRange(trace, startIndex, endIndex); 
             float minValue = GetMinInRange(trace, startIndex, endIndex);
-            float middleValue = (maxValue + minValue)/2;
 
             if (maxValue == 0)
                 return;
@@ -390,51 +328,10 @@ namespace SignalLabelingApp.Views
 
             EditorCanvas.Children.Add(polyline);
             EditorCanvas.Children.Add(HorPolyline);
-
-            if (currentOyControl != null)
-            {
-                currentOyControl.MaxValue.Text = maxValue.ToString();
-                currentOyControl.MiddleValue.Text = middleValue.ToString();
-                currentOyControl.MinValue.Text = minValue.ToString();
-            }
-            
         }
 
-        // private void UpdateOyControlValues()
-        // {
-        //     if (currentStationData == null || EditorCanvas == null)
-        //         return;
+        
 
-        //     // –ü–æ–ª—É—á–∞–µ–º –∑–Ω–∞—á–µ–Ω–∏—è –¥–ª—è –∫–∞–∂–¥–æ–≥–æ –∫–∞–Ω–∞–ª–∞
-        //     double maxValue1 = currentStationData.Channel1?.data?.Max() ?? 0;
-        //     double minValue1 = currentStationData.Channel1?.data?.Min() ?? 0;
-        //     double middleValue1 = (maxValue1 + minValue1) / 2;
-
-        //     double maxValue2 = currentStationData.Channel2?.data?.Max() ?? 0;
-        //     double minValue2 = currentStationData.Channel2?.data?.Min() ?? 0;
-        //     double middleValue2 = (maxValue2 + minValue2) / 2;
-
-        //     double maxValue3 = currentStationData.Channel3?.data?.Max() ?? 0;
-        //     double minValue3 = currentStationData.Channel3?.data?.Min() ?? 0;
-        //     double middleValue3 = (maxValue3 + minValue3) / 2;
-
-        //     // –û–±–Ω–æ–≤–ª—è–µ–º –∑–Ω–∞—á–µ–Ω–∏—è –≤ OyControl
-        //     var oyControls = ((EditorBorder.Child as Grid)?.Children[0] as Grid)?.Children.OfType<OyControl>().ToList();
-        //     if (oyControls != null && oyControls.Count >= 3)
-        //     {
-        //         oyControls[0].MaxValue.Text = maxValue1.ToString();
-        //         oyControls[0].MiddleValue.Text = middleValue1.ToString();
-        //         oyControls[0].MinValue.Text = minValue1.ToString();
-
-        //         oyControls[1].MaxValue.Text = maxValue2.ToString();
-        //         oyControls[1].MiddleValue.Text = middleValue2.ToString();
-        //         oyControls[1].MinValue.Text = minValue2.ToString();
-
-        //         oyControls[2].MaxValue.Text = maxValue3.ToString();
-        //         oyControls[2].MiddleValue.Text = middleValue3.ToString();
-        //         oyControls[2].MinValue.Text = minValue3.ToString();
-        //     }
-        // }
         public static float GetMaxInRange(TraceData trace, int x1, int x2)
         {
             if (trace == null || trace.data == null || trace.data.Count == 0)

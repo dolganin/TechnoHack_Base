@@ -1,14 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Dynamic;
 using System.Linq;
 using System.Numerics;
 using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Avalonia.Controls.Shapes;
-using Avalonia.Media;
 
 namespace SignalLabelingApp.Classes
 {
@@ -23,31 +20,6 @@ namespace SignalLabelingApp.Classes
         public string AmountOfStations { get; set; }
         public string Description { get; set; }
     }
-
-    public class NamedRectangle : Rectangle
-    {
-        public string Name { get; private set; }
-        public int NameInt { get; private set; }
-        public List<NamedRectangle> OrangeRectangles { get; set; } = new();
-
-        public NamedRectangle(int name)
-        {
-            Name = name.ToString();
-            NameInt = name;
-        }
-
-        public NamedRectangle(int name, double width, double height, IBrush fill) : base()
-        {
-            Name = name.ToString();
-            NameInt = name;
-            Width = width;
-            Height = height;
-            Fill = fill;
-        }
-    }
-
-
-    
 
 
     public class MiniseedFile
@@ -105,7 +77,7 @@ namespace SignalLabelingApp.Classes
     [JsonDerivedType(typeof(SignalSegmentationLabel), "segmentation")]
     public abstract class Label
     {
-        public int EventID;// = Globals.GenerateUniqueId();
+        public int ObjectID = Globals.GenerateUniqueId();
     }
 
     public class SignalClassificationLabel : Label
@@ -119,9 +91,7 @@ namespace SignalLabelingApp.Classes
     {
         public double SignalStartPos;
         public double SignalEndPos;
-     //   public ObservableCollection<DetectionObject> Objects { get; set; } = new();
-        public Dictionary<int, DetectionObject> Objects {get; set; } = new();
-       
+        public ObservableCollection<DetectionObject> Objects { get; set; } = new();
     }
 
     public class SignalSegmentationLabel : Label
@@ -130,6 +100,4 @@ namespace SignalLabelingApp.Classes
         public double ObjectEndPos;
     }
 
-
 }
-
