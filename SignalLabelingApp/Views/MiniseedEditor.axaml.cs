@@ -137,9 +137,9 @@ namespace SignalLabelingApp.Views
             var scaleXSlider = new Slider
             {
                 Minimum = 0.05,
-                Maximum = 2.0,
+                Maximum = 3.0,
                 Value = objectSelectionManager.DrawScaleX,
-                Width = 200,
+                Width = 300,
                 Height = 50,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
@@ -371,15 +371,15 @@ namespace SignalLabelingApp.Views
             int endIndex = Math.Min(trace.data.Count, (int)(endX / objectSelectionManager.DrawScaleX));
 
             float minIndex = startIndex;
-            float Index1 = (float)((startIndex + endIndex) * 0.1);
-            float Index2 = (float)((startIndex + endIndex) * 0.2);
-            float Index3 = (float)((startIndex + endIndex) * 0.3);
-            float Index4 = (float)((startIndex + endIndex) * 0.4);
-            float middleIndex = (float)((startIndex + endIndex) / 2);
-            float Index6 = (float)((startIndex + endIndex) * 0.6);
-            float Index7 = (float)((startIndex + endIndex) * 0.7);
-            float Index8 = (float)((startIndex + endIndex) * 0.8);
-            float Index9 = (float)((startIndex + endIndex) * 0.9);
+            float Index1 = (float)((endIndex - startIndex) * 0.1 + startIndex);
+            float Index2 = (float)((endIndex - startIndex) * 0.2 + startIndex);
+            float Index3 = (float)((endIndex - startIndex) * 0.3 + startIndex);
+            float Index4 = (float)((endIndex - startIndex) * 0.4 + startIndex);
+            float middleIndex = (float)((endIndex - startIndex) * 0.5 + startIndex);
+            float Index6 = (float)((endIndex - startIndex) * 0.6 + startIndex);
+            float Index7 = (float)((endIndex - startIndex) * 0.7 + startIndex);
+            float Index8 = (float)((endIndex - startIndex) * 0.8 + startIndex);
+            float Index9 = (float)((endIndex - startIndex) * 0.9 + startIndex);
             float maxIndex = (float)(endIndex);
 
             if (maxIndex == 0)

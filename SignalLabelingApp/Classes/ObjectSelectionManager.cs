@@ -17,21 +17,12 @@ using SignalLabelingApp.ViewModels;
 
 namespace SignalLabelingApp.Classes
 {
-    public class SelectionObject
-    {
-        public string LabelType { get; set; } // Тип лейбла (Classification, Detection, etc.)
-        public double StartPosition { get; set; } // Начальная позиция
-        public double EndPosition { get; set; } // Конечная позиция
-        public ImmutableSolidColorBrush MainColor { get; set; } // Цвет основного выделения
-        public List<(double Start, double End, ImmutableSolidColorBrush Color)> AdditionalSelections { get; set; } // Дополнительные выделения (например, оранжевые области)
-    }
 
     public class ObjectSelectionManager 
     {
         private NamedRectangle? singleSelectionRectangle; // Для ЛКМ выделения
         private Line? leftDashedLine;
         private Line? rightDashedLine;
-        //private List<NamedRectangle> multiSelectionRectangles = new(); // Для ПКМ выделений
         private List<TextBlock> blueTextBlocks = new(); // Для хранения TextBlock синих прямоугольников
         private List<TextBlock> orangeTextBlocks = new(); // Для хранения TextBlock оранжевых прямоугольников
 
@@ -47,8 +38,6 @@ namespace SignalLabelingApp.Classes
         public double adaptiveSizeValue = 10.0;
         public float DrawScaleX = 0.5f;
 
-        private NamedRectangle? currentRectangle;
-        private Line? startDashedLine;
 
         private Canvas CanvasToTrack;
 
@@ -336,7 +325,7 @@ namespace SignalLabelingApp.Classes
 
             if (rectangle != null)
             {
-                double minWidth = isRightClick ? 10 : 50;
+                double minWidth = adaptiveSizeEnabled ? 0 : isRightClick ? 10 : 50;
 
                 if (rectangle.Width >= minWidth)
                 {
@@ -413,9 +402,6 @@ namespace SignalLabelingApp.Classes
                     // Удаляем прямоугольник, если его ширина меньше минимальной
                     CanvasToTrack.Children.Remove(rectangle);
                 }
-
-                currentRectangle = null;
-                startDashedLine = null;
             }
         }
 
