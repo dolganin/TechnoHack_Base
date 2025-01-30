@@ -114,6 +114,7 @@ namespace SignalLabelingApp.Views
             var canvas = new Canvas(){
                 HorizontalAlignment= HorizontalAlignment.Stretch,
                 VerticalAlignment = VerticalAlignment.Stretch,
+                Background = Brushes.Transparent
             };
 
             EditorCanvas = canvas;
@@ -349,13 +350,6 @@ namespace SignalLabelingApp.Views
             if (currentStationData == null) return;
 
             EditorCanvas.Children.Clear();
-
-            var stationComboBox = new ComboBox
-            {
-                Margin = new Thickness(10, 10, 10, 0)
-            };
-
-            EditorCanvas.Children.Add(stationComboBox);
 
             double startX = EditorScrollViewer.Offset.X;
             double endX = startX + EditorScrollViewer.Viewport.Width;

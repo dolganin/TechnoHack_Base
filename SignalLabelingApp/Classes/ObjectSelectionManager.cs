@@ -31,7 +31,7 @@ namespace SignalLabelingApp.Classes
         private NamedRectangle? singleSelectionRectangle; // Для ЛКМ выделения
         private Line? leftDashedLine;
         private Line? rightDashedLine;
-        private List<NamedRectangle> multiSelectionRectangles = new(); // Для ПКМ выделений
+        //private List<NamedRectangle> multiSelectionRectangles = new(); // Для ПКМ выделений
         private List<TextBlock> blueTextBlocks = new(); // Для хранения TextBlock синих прямоугольников
         private List<TextBlock> orangeTextBlocks = new(); // Для хранения TextBlock оранжевых прямоугольников
 
@@ -217,8 +217,9 @@ namespace SignalLabelingApp.Classes
 
             if (!isRightClick)
             {
+                if (singleSelectionRectangle != null){
                 // Удалить все старые области, если используется ЛКМ
-                foreach (var old_rectangle in multiSelectionRectangles)
+                foreach (var old_rectangle in singleSelectionRectangle.OrangeRectangles)
                 {
                     CanvasToTrack.Children.Remove(old_rectangle);
                     var txtBlock = orangeTextBlocks.FirstOrDefault(tb => tb.Text == old_rectangle.Name);
@@ -227,9 +228,10 @@ namespace SignalLabelingApp.Classes
                         CanvasToTrack.Children.Remove(txtBlock);
                     }
                 }
-                multiSelectionRectangles.Clear();
+                singleSelectionRectangle.OrangeRectangles.Clear();
                 orangeTextBlocks.Clear();
-
+                
+                }
                 if (singleSelectionRectangle != null)
                 {
                     CanvasToTrack.Children.Remove(singleSelectionRectangle);
@@ -251,9 +253,7 @@ namespace SignalLabelingApp.Classes
             }
 
             var fillColor = isRightClick ? Colors.Orange : Colors.LightBlue;
-            var rectangle = new NamedRectangle(isRightClick ? orangeRectangleIdCounter++ : blueRectangleIdCounter++)
-            
-            
+            var rectangle = new NamedRectangle(0)
             {
                 Fill = new ImmutableSolidColorBrush(fillColor, 0.5),
                 Height = CanvasToTrack.Bounds.Height,
@@ -261,34 +261,17 @@ namespace SignalLabelingApp.Classes
                 Margin = new Thickness(startX, 0, 0, 0)
             };
 
-            {
-                var textBlock = new TextBlock
-                {
-                    Text = rectangle.Name,
-                    Foreground = Brushes.Black,
-                    FontSize = 20,
-                    FontWeight = FontWeight.Bold,
-                    HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
-                    VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
-                };
-
                 CanvasToTrack.Children.Add(rectangle);
-                CanvasToTrack.Children.Add(textBlock);
-
-                Canvas.SetLeft(textBlock, startX + rectangle.Width / 2);
-                Canvas.SetTop(textBlock, rectangle.Height / 2);
 
                 if (isRightClick)
                 {
-                    multiSelectionRectangles.Add(rectangle);
-                    orangeTextBlocks.Add(textBlock);
+                    singleSelectionRectangle.OrangeRectangles.Add(rectangle);
                 }
                 else
                 {
                     singleSelectionRectangle = rectangle;
-                    blueTextBlocks.Add(textBlock);
                 }
-            }
+            
         }
 
         private void Canvas_PointerMoved(object? sender, PointerEventArgs e)
@@ -300,15 +283,14 @@ namespace SignalLabelingApp.Classes
             double currentX = position.X;
             double rectWidth = Math.Abs(currentX - startX);
 
-            var rectangle = isRightClick ? multiSelectionRectangles.Last() : singleSelectionRectangle;
+            var rectangle = isRightClick ? singleSelectionRectangle.OrangeRectangles.Last() : singleSelectionRectangle;
 
             if (rectangle != null)
             {
                 if (isRightClick && singleSelectionRectangle != null)
                 {
-                    var blueRectangle = singleSelectionRectangle;
-                    double blueLeft = blueRectangle.Margin.Left;
-                    double blueRight = blueLeft + blueRectangle.Width;
+                    double blueLeft = singleSelectionRectangle.Margin.Left;
+                    double blueRight = blueLeft + singleSelectionRectangle.Width;
 
                     if (currentX < startX)
                     {
@@ -340,70 +322,101 @@ namespace SignalLabelingApp.Classes
                     else
                         rectangle.Margin = new Thickness(startX, 0, 0, 0);
                 }
-
-                var textBlock = isRightClick ? orangeTextBlocks.Last() : blueTextBlocks.Last();
-                if (textBlock != null)
-                {
-                    Canvas.SetLeft(textBlock, rectangle.Margin.Left + rectangle.Width / 2);
-                    Canvas.SetTop(textBlock, rectangle.Height / 2);
-                }
             }
         }
 
         private void Canvas_PointerReleased(object? sender, PointerReleasedEventArgs e)
         {
+            if (!isDrawingRectangle)
+                return;
+
             isDrawingRectangle = false;
 
-            if (isRightClick && singleSelectionRectangle != null)
-            {
-                var orangeRectangle = multiSelectionRectangles.Last();
-                var blueRectangle = singleSelectionRectangle;
+            var rectangle = isRightClick ? singleSelectionRectangle.OrangeRectangles.Last() : singleSelectionRectangle;
 
-                if (orangeRectangle.Margin.Left < blueRectangle.Margin.Left ||
-                    orangeRectangle.Margin.Left + orangeRectangle.Width > blueRectangle.Margin.Left + blueRectangle.Width)
+            if (rectangle != null)
+            {
+                double minWidth = isRightClick ? 10 : 50;
+
+                if (rectangle.Width >= minWidth)
                 {
-                    ShowError("Error: The orange area is outside the bounds of the blue area.");
-                    CanvasToTrack.Children.Remove(orangeRectangle);
-                    var txtBlock = orangeTextBlocks.Last();
-                    CanvasToTrack.Children.Remove(txtBlock);
-                    multiSelectionRectangles.Remove(orangeRectangle);
-                    orangeTextBlocks.Remove(txtBlock);
+                    rectangle.SetId(isRightClick ? ++orangeRectangleIdCounter : ++blueRectangleIdCounter);
+
+                    var textBlock = new TextBlock
+                    {
+                        Text = rectangle.Name,
+                        Foreground = Brushes.Black,
+                        FontSize = isRightClick ? 20 : 30, // Устанавливаем размер шрифта в зависимости от типа прямоугольника
+                        FontWeight = FontWeight.Bold,
+                        HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Center,
+                        VerticalAlignment = Avalonia.Layout.VerticalAlignment.Center
+                    };
+
+                    CanvasToTrack.Children.Add(textBlock);
+                    Canvas.SetLeft(textBlock, rectangle.Margin.Left + rectangle.Width / 2);
+                    Canvas.SetTop(textBlock, rectangle.Height / 2);
+
+                    if (isRightClick)
+                    {
+                        orangeTextBlocks.Add(textBlock);
+                    }
+                    else
+                    {
+                        blueTextBlocks.Add(textBlock);
+                    }
+
+                    if (isRightClick && singleSelectionRectangle != null)
+                    {
+                        var orangeRectangle = singleSelectionRectangle.OrangeRectangles.Last();
+
+                        if (orangeRectangle.Margin.Left < singleSelectionRectangle.Margin.Left ||
+                            orangeRectangle.Margin.Left + orangeRectangle.Width > singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width)
+                        {
+                            ShowError("Error: The orange area is outside the bounds of the blue area.");
+                            CanvasToTrack.Children.Remove(orangeRectangle);
+                            var txtBlock = orangeTextBlocks.Last();
+                            CanvasToTrack.Children.Remove(txtBlock);
+                            singleSelectionRectangle.OrangeRectangles.Remove(orangeRectangle);
+                            orangeTextBlocks.Remove(txtBlock);
+                        }
+                        else
+                        {
+                            singleSelectionRectangle.OrangeRectangles.Add(orangeRectangle);
+                        }
+                    }
+
+                    if (!isRightClick && adaptiveSizeEnabled && singleSelectionRectangle != null)
+                    {
+                        // Применение адаптивного размера только для ЛКМ
+                        double adjustedWidth = adaptiveSizeValue * DrawScaleX;
+
+                        singleSelectionRectangle.Width = adjustedWidth;
+
+                        // Проверяем выход за пределы Canvas
+                        if (singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width > CanvasToTrack.Width)
+                        {
+                            singleSelectionRectangle.Width = CanvasToTrack.Width - singleSelectionRectangle.Margin.Left;
+                        }
+
+                        var finalTextBlock = blueTextBlocks.Last();
+                        if (finalTextBlock != null)
+                        {
+                            Canvas.SetLeft(finalTextBlock, singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width / 2);
+                            Canvas.SetTop(finalTextBlock, singleSelectionRectangle.Height / 2);
+                        }
+                    }
+
+                    AddDashedLines(rectangle);
                 }
                 else
                 {
-                    blueRectangle.OrangeRectangles.Add(orangeRectangle);
-                }
-            }
-
-            if (!isRightClick && adaptiveSizeEnabled && singleSelectionRectangle != null)
-            {
-                // Применение адаптивного размера только для ЛКМ
-                double adjustedWidth = adaptiveSizeValue * DrawScaleX;
-
-                singleSelectionRectangle.Width = adjustedWidth;
-
-                // Проверяем выход за пределы Canvas
-                if (singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width > CanvasToTrack.Width)
-                {
-                    singleSelectionRectangle.Width = CanvasToTrack.Width - singleSelectionRectangle.Margin.Left;
+                    // Удаляем прямоугольник, если его ширина меньше минимальной
+                    CanvasToTrack.Children.Remove(rectangle);
                 }
 
-                var textBlock = blueTextBlocks.Last();
-                if (textBlock != null)
-                {
-                    Canvas.SetLeft(textBlock, singleSelectionRectangle.Margin.Left + singleSelectionRectangle.Width / 2);
-                    Canvas.SetTop(textBlock, singleSelectionRectangle.Height / 2);
-                }
+                currentRectangle = null;
+                startDashedLine = null;
             }
-
-            // Добавляем пунктирные линии на границы области
-            if (!isRightClick && singleSelectionRectangle != null)
-            {
-                AddDashedLines(singleSelectionRectangle);
-            }
-
-            currentRectangle = null;
-            startDashedLine = null;
         }
 
         private void AddDashedLines(NamedRectangle rectangle)

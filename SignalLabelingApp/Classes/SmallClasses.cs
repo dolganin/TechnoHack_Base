@@ -27,22 +27,30 @@ namespace SignalLabelingApp.Classes
     public class NamedRectangle : Rectangle
     {
         public string Name { get; private set; }
+        public int Id { get; private set; }
         public int NameInt { get; private set; }
         public List<NamedRectangle> OrangeRectangles { get; set; } = new();
 
-        public NamedRectangle(int name)
+         public NamedRectangle(int id)
         {
-            Name = name.ToString();
-            NameInt = name;
+            Id = id;
+            Name = $"{id}";
+            NameInt = id;
         }
 
-        public NamedRectangle(int name, double width, double height, IBrush fill) : base()
+        public NamedRectangle(int id, double width, double height, IBrush fill) : base()
         {
-            Name = name.ToString();
-            NameInt = name;
+            Id = id;
+            Name = $"{id}";
             Width = width;
             Height = height;
             Fill = fill;
+        }
+
+        public void SetId(int id)
+        {
+            Id = id;
+            Name = $"{id}";
         }
     }
 
