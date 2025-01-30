@@ -95,7 +95,7 @@ namespace SignalLabelingApp.Classes
                     ObjectStartPos = objectStartPos,
                     ObjectEndPos = objectEndPos,
                     ObjectClass = objectClassId,
-                    EventID = singleSelectionRectangle.NameInt
+                    EventID = singleSelectionRectangle.Id
                 };
             }
             else if (selectedLabelType == "Detection")
@@ -104,7 +104,7 @@ namespace SignalLabelingApp.Classes
                 {
                     SignalStartPos = objectStartPos,
                     SignalEndPos = objectEndPos,
-                    EventID = singleSelectionRectangle.NameInt
+                    EventID = singleSelectionRectangle.Id
                 };
 
                 foreach (var rect in singleSelectionRectangle.OrangeRectangles)
@@ -115,7 +115,7 @@ namespace SignalLabelingApp.Classes
                     if (rectStart >= objectStartPos && rectEnd <= objectEndPos)
                     {
                         //detectionLabel.Objects.Add(new Object {get;}, { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId });
-                        detectionLabel.Objects.Add( rect.NameInt, new DetectionObject() { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId } );                 
+                        detectionLabel.Objects.Add( rect.Id, new DetectionObject() { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId } );                 
                     }
                     else
                     {
@@ -132,7 +132,7 @@ namespace SignalLabelingApp.Classes
                 {
                     ObjectStartPos = objectStartPos,
                     ObjectEndPos = objectEndPos,
-                    EventID = singleSelectionRectangle.NameInt
+                    EventID = singleSelectionRectangle.Id
                 };
             }
 
@@ -379,10 +379,10 @@ namespace SignalLabelingApp.Classes
                             singleSelectionRectangle.OrangeRectangles.Remove(orangeRectangle);
                             orangeTextBlocks.Remove(txtBlock);
                         }
-                        else
-                        {
-                            singleSelectionRectangle.OrangeRectangles.Add(orangeRectangle);
-                        }
+                        //else
+                        //{
+                        //    singleSelectionRectangle.OrangeRectangles.Add(orangeRectangle);
+                        //}
                     }
 
                     if (!isRightClick && adaptiveSizeEnabled && singleSelectionRectangle != null)
