@@ -10,5 +10,11 @@ namespace SignalLabelingApp.Views
             InitializeComponent();
             DataContext = new ErrorWindowViewModel();
         }
+                // Обработчик клика на кнопку "Закрыть"
+        private void CloseCommand(object sender, Avalonia.Interactivity.RoutedEventArgs e)
+        {
+            // Закрытие окна
+            this.Close();
+        }
     }
 }

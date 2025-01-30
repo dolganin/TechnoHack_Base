@@ -1,8 +1,8 @@
 {
   "version": 2,
-  "dgSpecHash": "xknbqT6ua5M=",
+  "dgSpecHash": "a/sCFYQEZnc=",
   "success": true,
-  "projectFilePath": "C:\\Users\\master\\Desktop\\app\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+  "projectFilePath": "C:\\Users\\master\\Desktop\\app3\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\master\\.nuget\\packages\\avalonia\\11.1.0\\avalonia.11.1.0.nupkg.sha512",
     "C:\\Users\\master\\.nuget\\packages\\avalonia.angle.windows.natives\\2.1.22045.20230930\\avalonia.angle.windows.natives.2.1.22045.20230930.nupkg.sha512",
