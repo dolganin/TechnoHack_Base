@@ -1,32 +1,25 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\master\\Desktop\\app3\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {}
+    "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\master\\Desktop\\app3\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {
+    "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\master\\Desktop\\app3\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+        "projectUniqueName": "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
         "projectName": "SignalLabelingApp",
-        "projectPath": "C:\\Users\\master\\Desktop\\app3\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
-        "packagesPath": "C:\\Users\\master\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\master\\Desktop\\app3\\TechnoHack_Base\\SignalLabelingApp\\obj\\",
+        "projectPath": "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+        "packagesPath": "C:\\Users\\bespa\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\obj\\",
         "projectStyle": "PackageReference",
-        "fallbackFolders": [
-          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
-        ],
         "configFilePaths": [
-          "C:\\Users\\master\\AppData\\Roaming\\NuGet\\NuGet.Config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
-          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+          "C:\\Users\\bespa\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
-          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
-          "C:\\Program Files\\dotnet\\library-packs": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -101,11 +94,27 @@
           "warn": true,
           "downloadDependencies": [
             {
+              "name": "Microsoft.AspNetCore.App.Ref",
+              "version": "[8.0.12, 8.0.12]"
+            },
+            {
               "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
               "version": "[8.0.12, 8.0.12]"
             },
             {
+              "name": "Microsoft.NETCore.App.Host.win-x64",
+              "version": "[8.0.12, 8.0.12]"
+            },
+            {
+              "name": "Microsoft.NETCore.App.Ref",
+              "version": "[8.0.12, 8.0.12]"
+            },
+            {
               "name": "Microsoft.NETCore.App.Runtime.win-x64",
+              "version": "[8.0.12, 8.0.12]"
+            },
+            {
+              "name": "Microsoft.WindowsDesktop.App.Ref",
               "version": "[8.0.12, 8.0.12]"
             },
             {

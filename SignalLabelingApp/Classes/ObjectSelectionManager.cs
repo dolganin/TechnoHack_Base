@@ -26,7 +26,7 @@ namespace SignalLabelingApp.Classes
         public List<(double Start, double End, ImmutableSolidColorBrush Color)> AdditionalSelections { get; set; } // Дополнительные выделения (например, оранжевые области)
     }
 
-    public class ObjectSelectionManager
+    public class ObjectSelectionManager 
     {
         private NamedRectangle? singleSelectionRectangle; // Для ЛКМ выделения
         private Line? leftDashedLine;
@@ -38,8 +38,8 @@ namespace SignalLabelingApp.Classes
         private bool isDrawingRectangle = false;
         private bool isRightClick = false; // Флаг для определения ПКМ
         private int startX = 0;
-        private int blueRectangleIdCounter = 0; // Счетчик для ID синих прямоугольников
-        private int orangeRectangleIdCounter = 0; // Счетчик для ID оранжевых прямоугольников
+        public int blueRectangleIdCounter = 0; // Счетчик для ID синих прямоугольников
+        public int orangeRectangleIdCounter = 0; // Счетчик для ID оранжевых прямоугольников
 
         public int objectClassId = 0;
         public string selectedLabelType = "Classification";
@@ -94,7 +94,8 @@ namespace SignalLabelingApp.Classes
                 {
                     ObjectStartPos = objectStartPos,
                     ObjectEndPos = objectEndPos,
-                    ObjectClass = objectClassId
+                    ObjectClass = objectClassId,
+                    EventID = singleSelectionRectangle.NameInt
                 };
             }
             else if (selectedLabelType == "Detection")
@@ -103,7 +104,7 @@ namespace SignalLabelingApp.Classes
                 {
                     SignalStartPos = objectStartPos,
                     SignalEndPos = objectEndPos,
-                    Objects = new ObservableCollection<DetectionObject>()
+                    EventID = singleSelectionRectangle.NameInt
                 };
 
                 foreach (var rect in singleSelectionRectangle.OrangeRectangles)
@@ -113,7 +114,8 @@ namespace SignalLabelingApp.Classes
 
                     if (rectStart >= objectStartPos && rectEnd <= objectEndPos)
                     {
-                        detectionLabel.Objects.Add(new DetectionObject() { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId });
+                        //detectionLabel.Objects.Add(new Object {get;}, { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId });
+                        detectionLabel.Objects.Add( rect.NameInt, new DetectionObject() { X = (int)(rectStart - objectStartPos), W = (int)(rectEnd - rectStart), Class = objectClassId } );                 
                     }
                     else
                     {
@@ -129,7 +131,8 @@ namespace SignalLabelingApp.Classes
                 label = new SignalSegmentationLabel
                 {
                     ObjectStartPos = objectStartPos,
-                    ObjectEndPos = objectEndPos
+                    ObjectEndPos = objectEndPos,
+                    EventID = singleSelectionRectangle.NameInt
                 };
             }
 
@@ -248,7 +251,9 @@ namespace SignalLabelingApp.Classes
             }
 
             var fillColor = isRightClick ? Colors.Orange : Colors.LightBlue;
-            var rectangle = new NamedRectangle(isRightClick ? ++orangeRectangleIdCounter : ++blueRectangleIdCounter)
+            var rectangle = new NamedRectangle(isRightClick ? orangeRectangleIdCounter++ : blueRectangleIdCounter++)
+            
+            
             {
                 Fill = new ImmutableSolidColorBrush(fillColor, 0.5),
                 Height = CanvasToTrack.Bounds.Height,
