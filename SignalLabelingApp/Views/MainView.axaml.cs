@@ -22,12 +22,8 @@ namespace SignalLabelingApp.Views
             Globals.MainEditorControl = EditorZone;
             //Globals.CurrentEditorMetadata = EditorMetadata;
             Globals.AllDatasetSamples.CollectionChanged += (_, __) => UpdateDatasetSamplesView();
-
-
             OpenFileMenuItem.PointerPressed += OpenFileMenuItem_PointerPressed;
             SaveMenuItem.PointerPressed += SaveMenuItem_PointerPressed;
-
-
         }
 
         private void OpenFileMenuItem_PointerPressed(object? sender, Avalonia.Input.PointerPressedEventArgs e)

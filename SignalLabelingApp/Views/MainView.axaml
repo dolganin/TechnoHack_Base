@@ -50,7 +50,7 @@
 			<Expander ExpandDirection="Left" DockPanel.Dock="Right" VerticalAlignment="Stretch">
 				<Border x:Name="CreatedLabelsBorder"
 						Background="#EEE"
-						Padding="10"
+						Padding="0"
 						Width="200">
 					<ScrollViewer VerticalScrollBarVisibility="Visible">
 						<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5">
