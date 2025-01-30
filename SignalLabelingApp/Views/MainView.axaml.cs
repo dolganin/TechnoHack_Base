@@ -7,6 +7,9 @@ using Avalonia.Interactivity;
 using SignalLabelingApp.Classes;
 using System.Threading.Tasks;
 using Label = SignalLabelingApp.Classes.Label;
+using System;
+using Avalonia.Controls.Primitives;
+using Avalonia.VisualTree;
 
 
 namespace SignalLabelingApp.Views
@@ -19,7 +22,7 @@ namespace SignalLabelingApp.Views
             Globals.MainEditorControl = EditorZone;
             //Globals.CurrentEditorMetadata = EditorMetadata;
             Globals.AllDatasetSamples.CollectionChanged += (_, __) => UpdateDatasetSamplesView();
-            
+
 
             OpenFileMenuItem.PointerPressed += OpenFileMenuItem_PointerPressed;
             SaveMenuItem.PointerPressed += SaveMenuItem_PointerPressed;
@@ -49,7 +52,7 @@ namespace SignalLabelingApp.Views
         private void UpdateDatasetSamplesView()
         {
             CreatedLabels.Children.Clear();
-            
+
             foreach (var sample in Globals.AllDatasetSamples)
             {
                 if (sample.Label == null) continue;
@@ -64,8 +67,26 @@ namespace SignalLabelingApp.Views
 
                 var border = new Border
                 {
-                    BorderBrush = Brushes.Black, // Цвет рамки
-                    BorderThickness = new Thickness(1), // Толщина рамки     
+                    //BorderBrush = Brushes.Black, // Цвет рамки
+                    //BorderThickness = new Thickness(1), // Толщина рамки
+                };
+
+                var borderGray = new Border
+                {
+                    BorderBrush = Brushes.Gray,
+                    BorderThickness = new Thickness(1),
+                    Padding = new Thickness(3),
+                    Margin = new Thickness(3),
+                    CornerRadius = new CornerRadius(3)
+                };
+
+                var borderGrayDetectionObj = new Border
+                {
+                    BorderBrush = Brushes.Gray,
+                    BorderThickness = new Thickness(1),
+                    Padding = new Thickness(3),
+                    Margin = new Thickness(3),
+                    CornerRadius = new CornerRadius(3)
                 };
 
                 border.Child = labelBlock;
@@ -77,12 +98,28 @@ namespace SignalLabelingApp.Views
                     HorizontalAlignment = HorizontalAlignment.Stretch
                 };
 
+                var expanderBox = new Expander
+                {
+                    Header = "id",
+                    //Margin = new Thickness(5),
+                    HorizontalAlignment = HorizontalAlignment.Stretch
+
+                };
+
+                var gridBox = new Grid(){
+                    RowDefinitions = RowDefinitions.Parse("Auto Auto"),
+                };
+
+                expanderBox.Content = gridBox;
+
                 // Добавляем кнопку удаления
                 var deleteButton = new Button
                 {
                     Margin = new Thickness(5),
-                    HorizontalAlignment = HorizontalAlignment.Stretch,
-                    Content = "Delete",
+                    //Height = 30,
+                    
+                    HorizontalAlignment = HorizontalAlignment.Left,
+                    Content = "X",
                 };
 
                 // Подписываемся на событие нажатия на кнопку удаления
@@ -91,12 +128,24 @@ namespace SignalLabelingApp.Views
                     Globals.AllDatasetSamples.Remove(sample);
                 };
 
-                labelBlock.Children.Add(deleteButton);
+                expanderBox.Content = gridBox;
+                var expanderHeaderPanel = new StackPanel(){Orientation=Orientation.Horizontal};
+                expanderHeaderPanel.Children.Add(deleteButton);
+                expanderHeaderPanel.Children.Add(new TextBlock(){Text="id: _", VerticalAlignment=VerticalAlignment.Center});
+                expanderBox.Header = expanderHeaderPanel;
+
+                labelBlock.Children.Add(expanderBox);
 
                 if (label is SignalClassificationLabel classificationLabel)
                 {
-                    comboBox.Items.Add(new TextBlock { Text = $"Type: Classification\nStart: {classificationLabel.ObjectStartPos}\nEnd: {classificationLabel.ObjectEndPos}\nClass: {classificationLabel.ObjectClass}" });
-                    labelBlock.Children.Add(comboBox);
+                    var stpTmp = new StackPanel { Orientation = Orientation.Vertical, Spacing = 5 };
+                    Grid.SetRow(borderGray, 0);
+                    borderGray.Child = stpTmp;
+                    stpTmp.Children.Add(new TextBlock { Text = $"Type: Classification\nEvent_id:\nStart: {Math.Round(classificationLabel.ObjectStartPos, 4)}\nEnd: {Math.Round(classificationLabel.ObjectEndPos, 4)}\nClass: {Math.Round(classificationLabel.ObjectClass, 4)}" });
+                    gridBox.Children.Add(borderGray);
+
+                    //comboBox.Items.Add(new TextBlock { Text = $"Type: Classification\nStart: {Math.Round(classificationLabel.ObjectStartPos, 4)}\nEnd: {Math.Round(classificationLabel.ObjectEndPos, 4)}\nClass: {Math.Round(classificationLabel.ObjectClass, 4)}" });
+                    //labelBlock.Children.Add(comboBox);
                     //labelBlock.Children.Add(new TextBlock { Text = $"Type: Classification" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Start: {classificationLabel.ObjectStartPos}" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"End: {classificationLabel.ObjectEndPos}" });
@@ -104,35 +153,53 @@ namespace SignalLabelingApp.Views
                 }
                 else if (label is SignalDetectionLabel detectionLabel)
                 {
-                    comboBox.Items.Add(new TextBlock { Text = $"Type: Detection\nStart: {detectionLabel.SignalStartPos}\nEnd: {detectionLabel.SignalEndPos}" });
-                    labelBlock.Children.Add(comboBox);
+                    var stpTmp = new StackPanel { Orientation = Orientation.Vertical, Spacing = 5 };
+                    Grid.SetRow(borderGray, 0);
+                    borderGray.Child = stpTmp;
+                    stpTmp.Children.Add(new TextBlock { Text = $"Type: Detection\nEvent_id:\nStart: {Math.Round(detectionLabel.SignalStartPos, 4)}\nEnd: {Math.Round(detectionLabel.SignalEndPos, 4)}" });
+                    gridBox.Children.Add(borderGray);
+                    
+                    var stpTmpDetectionObj = new StackPanel { Orientation = Orientation.Vertical, Spacing = 5 };
+                    Grid.SetRow(borderGrayDetectionObj, 1);
+                    borderGrayDetectionObj.Child = stpTmpDetectionObj;
+                    gridBox.Children.Add(borderGrayDetectionObj);
+
+                    //comboBox.Items.Add(new TextBlock { Text = $"Type: Detection\nStart: {Math.Round(detectionLabel.SignalStartPos, 4)}\nEnd: {Math.Round(detectionLabel.SignalEndPos, 4)}" });
+                    //labelBlock.Children.Add(comboBox);
                     //labelBlock.Children.Add(new TextBlock { Text = $"Type: Detection" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Start: {detectionLabel.SignalStartPos}" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"End: {detectionLabel.SignalEndPos}" });
 
                     foreach (var obj in detectionLabel.Objects)
                     {
-                        comboBox.Items.Add(new TextBlock { Text = $"Objects:\nObj_start={obj.X}\nObj_end={obj.W}\nObj_class={obj.Class}" });
-
+    
+                        stpTmpDetectionObj.Children.Add(new TextBlock { Text = $"Object:\nObj_start={obj.X}\nObj_len={obj.W}\nObj_class={obj.Class}" });
+                        
+                        //comboBox.Items.Add(new TextBlock { Text = $"Objects:\nObj_start={obj.X}\nObj_end={obj.W}\nObj_class={obj.Class}" });
                         //labelBlock.Children.Add(new TextBlock { Text = $"Objects: Obj_start={obj.X}\n, Obj_end={obj.W}, \nObj_class={obj.Class}" });
                     }
                 }
                 else if (label is SignalSegmentationLabel segmentationLabel)
                 {
-                    comboBox.Items.Add(new TextBlock { Text = $"Type: Segmentation\nStart: {segmentationLabel.ObjectStartPos}\nEnd: {segmentationLabel.ObjectEndPos}" });
-                    labelBlock.Children.Add(comboBox);
+                    var stpTmp = new StackPanel { Orientation = Orientation.Vertical, Spacing = 5 };
+                    Grid.SetRow(borderGray, 0);
+                    borderGray.Child = stpTmp;
+                    stpTmp.Children.Add(new TextBlock { Text = $"Type: Segmentation\nEvent_id:\nStart: {Math.Round(segmentationLabel.ObjectStartPos, 4)}\nEnd: {Math.Round(segmentationLabel.ObjectEndPos, 4)}" });
+                    gridBox.Children.Add(borderGray);
+                    //comboBox.Items.Add(new TextBlock { Text = $"Type: Segmentation\nStart: {Math.Round(segmentationLabel.ObjectStartPos, 4)}\nEnd: {Math.Round(segmentationLabel.ObjectEndPos, 4)}" });
+                    //labelBlock.Children.Add(comboBox);
                     //labelBlock.Children.Add(new TextBlock { Text = $"Type: Segmentation" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"Start: {segmentationLabel.ObjectStartPos}" });
                     //labelBlock.Children.Add(new TextBlock { Text = $"End: {segmentationLabel.ObjectEndPos}" });
                 }
 
-                
+
 
                 CreatedLabels.Children.Add(border);
-                
+
             }
         }
 
     }
-    
+
 }

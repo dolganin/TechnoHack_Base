@@ -121,6 +121,7 @@ namespace SignalLabelingApp.Classes
     public class SignalSegmentationLabel : Label
     {
         public double ObjectStartPos;
+
         public double ObjectEndPos;
     }
 

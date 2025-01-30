@@ -53,7 +53,7 @@
 					Padding="10"
 					Width="200">
 				<ScrollViewer VerticalScrollBarVisibility="Visible">
-						<StackPanel Orientation="Vertical" x:Name="CreatedLabels">
+					<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5">
 					</StackPanel>
 				</ScrollViewer>
 			</Border>
