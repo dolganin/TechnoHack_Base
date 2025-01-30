@@ -47,16 +47,17 @@
 			</Border>-->
 
 			<!-- Правая панель для списка меток (Created labels) -->
-			<Border x:Name="CreatedLabelsBorder"
-				    DockPanel.Dock="Right"
-					Background="#EEE"
-					Padding="10"
-					Width="200">
-				<ScrollViewer VerticalScrollBarVisibility="Visible">
-						<StackPanel Orientation="Vertical" x:Name="CreatedLabels">
-					</StackPanel>
-				</ScrollViewer>
-			</Border>
+			<Expander ExpandDirection="Left" DockPanel.Dock="Right" VerticalAlignment="Stretch">
+				<Border x:Name="CreatedLabelsBorder"
+						Background="#EEE"
+						Padding="10"
+						Width="200">
+					<ScrollViewer VerticalScrollBarVisibility="Visible">
+						<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5">
+						</StackPanel>
+					</ScrollViewer>
+				</Border>
+			</Expander>
 
 			<!-- Центральная область под редактор (Editor).
              Поскольку LastChildFill=True, 
@@ -65,7 +66,7 @@
 				<Border x:Name="EditorZone" 
 					Grid.Row="0"
 					Background="#FFF"
-						Margin="10"
+						Margin="5"
 						>
 				</Border>
 

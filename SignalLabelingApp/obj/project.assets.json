@@ -3556,11 +3556,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\bespa\\workspace\\PRASA\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+      "projectUniqueName": "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
       "projectName": "SignalLabelingApp",
-      "projectPath": "C:\\Users\\bespa\\workspace\\PRASA\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+      "projectPath": "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
       "packagesPath": "C:\\Users\\bespa\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\bespa\\workspace\\PRASA\\TechnoHack_Base\\SignalLabelingApp\\obj\\",
+      "outputPath": "C:\\Users\\bespa\\nc_workspace\\2024-10-22_13-07-23\\TechnoHack_Base\\SignalLabelingApp\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
         "C:\\Users\\bespa\\AppData\\Roaming\\NuGet\\NuGet.Config"
