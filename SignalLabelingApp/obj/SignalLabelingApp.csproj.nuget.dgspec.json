@@ -1,25 +1,28 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj": {}
+    "C:\\Users\\Sim_Sim\\Source\\Repos\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj": {
+    "C:\\Users\\Sim_Sim\\Source\\Repos\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj",
+        "projectUniqueName": "C:\\Users\\Sim_Sim\\Source\\Repos\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
         "projectName": "SignalLabelingApp",
-        "projectPath": "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\SignalLabelingApp.csproj",
-        "packagesPath": "C:\\Users\\bespa\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\bespa\\workspace\\PRASA\\SignalLabelingApp\\obj\\",
+        "projectPath": "C:\\Users\\Sim_Sim\\Source\\Repos\\TechnoHack_Base\\SignalLabelingApp\\SignalLabelingApp.csproj",
+        "packagesPath": "C:\\Users\\Sim_Sim\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\Sim_Sim\\Source\\Repos\\TechnoHack_Base\\SignalLabelingApp\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\bespa\\AppData\\Roaming\\NuGet\\NuGet.Config"
+          "C:\\Users\\Sim_Sim\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
           "net8.0"
         ],
         "sources": {
+          "C:\\Program Files\\dotnet\\library-packs": {},
+          "C:\\Users\\Sim_Sim\\Desktop\\Scada\\LocalNugetPackage": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
@@ -37,8 +40,7 @@
           "enableAudit": "true",
           "auditLevel": "low",
           "auditMode": "direct"
-        },
-        "SdkAnalysisLevel": "9.0.100"
+        }
       },
       "frameworks": {
         "net8.0": {
@@ -72,6 +74,10 @@
               "target": "Package",
               "version": "[8.2.1, )"
             },
+            "MathNet.Numerics": {
+              "target": "Package",
+              "version": "[5.0.0, )"
+            },
             "Python.Runtime": {
               "target": "Package",
               "version": "[2.7.9, )"
@@ -94,32 +100,16 @@
           "warn": true,
           "downloadDependencies": [
             {
-              "name": "Microsoft.AspNetCore.App.Ref",
-              "version": "[8.0.12, 8.0.12]"
-            },
-            {
               "name": "Microsoft.AspNetCore.App.Runtime.win-x64",
-              "version": "[8.0.12, 8.0.12]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Host.win-x64",
-              "version": "[8.0.12, 8.0.12]"
-            },
-            {
-              "name": "Microsoft.NETCore.App.Ref",
-              "version": "[8.0.12, 8.0.12]"
+              "version": "[8.0.8, 8.0.8]"
             },
             {
               "name": "Microsoft.NETCore.App.Runtime.win-x64",
-              "version": "[8.0.12, 8.0.12]"
-            },
-            {
-              "name": "Microsoft.WindowsDesktop.App.Ref",
-              "version": "[8.0.12, 8.0.12]"
+              "version": "[8.0.8, 8.0.8]"
             },
             {
               "name": "Microsoft.WindowsDesktop.App.Runtime.win-x64",
-              "version": "[8.0.12, 8.0.12]"
+              "version": "[8.0.8, 8.0.8]"
             }
           ],
           "frameworkReferences": {
@@ -127,7 +117,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.102/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.400/PortableRuntimeIdentifierGraph.json"
         }
       },
       "runtimes": {

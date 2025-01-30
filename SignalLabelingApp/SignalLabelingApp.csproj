@@ -6,7 +6,8 @@
     <LangVersion>latest</LangVersion>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
     <SelfContained>true</SelfContained>
-    <RuntimeIdentifier>win-x64</RuntimeIdentifier> <!-- Укажите нужный RID -->
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks> <!-- Укажите нужный RID -->
   </PropertyGroup>
   
   <ItemGroup>
@@ -22,11 +23,15 @@
     <!--Condition below is needed to remove Avalonia.Diagnostics package from build output in Release configuration.-->
     <PackageReference Condition="'$(Configuration)' == 'Debug'" Include="Avalonia.Diagnostics" Version="$(AvaloniaVersion)" />
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+    <PackageReference Include="MathNet.Numerics" Version="5.0.0" />
     <PackageReference Include="Python.Runtime" Version="2.7.9" />
     <PackageReference Include="pythonnet" Version="3.0.5" />
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="Views\SpectrogramView.axaml.cs">
+      <DependentUpon>SpectrogramView.axaml</DependentUpon>
+    </Compile>
     <Compile Update="Views\MiniseedEditor.axaml.cs">
       <DependentUpon>MiniseedEditor.axaml</DependentUpon>
     </Compile>

@@ -29,6 +29,8 @@ namespace SignalLabelingApp.Views
 
         public StationData currentStationData;
 
+        public SpectrogramView spectrogramView = null;
+
         public MiniseedEditor()
         {
             InitializeComponent();
@@ -42,6 +44,11 @@ namespace SignalLabelingApp.Views
 
         public void DrawSignalsFromMiniseed(MiniseedFile miniseedFile)
         {
+            Grid AllEditorComponentsGrid = new Grid()
+            {
+                RowDefinitions = RowDefinitions.Parse("* Auto 0.2*")
+                };
+
             Grid EditorGrid = new Grid
             {
                 IsHitTestVisible = true,
@@ -135,7 +142,26 @@ namespace SignalLabelingApp.Views
             EditorGrid.Children.Add(stationComboBox);
             EditorGrid.Children.Add(scaleXSlider);
 
-            EditorBorder.Child = EditorGrid;
+            Grid.SetRow(EditorGrid, 0);
+            AllEditorComponentsGrid.Children.Add(EditorGrid);
+
+            spectrogramView = new SpectrogramView()
+            {
+                HorizontalAlignment = HorizontalAlignment.Stretch,
+                VerticalAlignment = VerticalAlignment.Stretch,
+                VerticalContentAlignment = VerticalAlignment.Stretch
+            };
+
+
+            GridSplitter splitter = new GridSplitter();
+            Grid.SetRow(splitter, 1);
+            AllEditorComponentsGrid.Children.Add(splitter);
+
+
+            Grid.SetRow(spectrogramView, 2);
+            AllEditorComponentsGrid.Children.Add(spectrogramView);
+
+            EditorBorder.Child = AllEditorComponentsGrid;
         }
 
         private Control CreateSettingsFlyoutContent()
@@ -288,6 +314,9 @@ namespace SignalLabelingApp.Views
             RedrawOneChannel(0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
             RedrawOneChannel(channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
             RedrawOneChannel(2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
+
+
+            spectrogramView.Update(currentStationData.Channel1.data.GetRange((int)startX, (int)(endX - startX)), 200);
         }
 
         private void RedrawOneChannel(int channelStartY, int channelHeight, TraceData trace, double startX, double endX, ImmutableSolidColorBrush brush)
