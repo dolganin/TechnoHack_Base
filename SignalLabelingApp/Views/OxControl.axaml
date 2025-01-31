@@ -4,7 +4,7 @@
       x:Class="SignalLabelingApp.Views.OxControl">
 
 
-    <Border Background="#EEE">
+    <Border Background="#e7f1e5">
          <Grid RowDefinitions=" * Auto ">
             <Canvas x:Name="ArrowOxCanvas" Grid.Row="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
                 <Path x:Name="ArrowOxPath" Stroke="Black" StrokeThickness="2" VerticalAlignment="Top"/>

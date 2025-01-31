@@ -53,8 +53,8 @@ namespace SignalLabelingApp.Views
                 {
                     // Вертикальная стрелка
                     new LineGeometry(new Point(0, canvasHeight / 2), new Point(canvasWidth, canvasHeight / 2)),
-                    new LineGeometry(new Point(arrowOxWidth * 0.975, canvasHeight / 2 - 2 * arrowOxHeight / 2 ), new Point(arrowOxWidth, canvasHeight / 2 )),
-                    new LineGeometry(new Point(arrowOxWidth * 0.975, canvasHeight / 2 + 2 * arrowOxHeight / 2 ), new Point(arrowOxWidth, canvasHeight / 2)),
+                    new LineGeometry(new Point(arrowOxWidth * 0.975, canvasHeight / 2 -  arrowOxHeight / 2 ), new Point(arrowOxWidth, canvasHeight / 2 )),
+                    new LineGeometry(new Point(arrowOxWidth * 0.975, canvasHeight / 2 +  arrowOxHeight / 2 ), new Point(arrowOxWidth, canvasHeight / 2)),
 
                     // Узкие деления
                     new LineGeometry(new Point(arrowOxWidth * 0, canvasHeight / 2 - arrowOxHeight / 2), new Point(arrowOxWidth * 0, canvasHeight / 2 + arrowOxHeight / 2)),

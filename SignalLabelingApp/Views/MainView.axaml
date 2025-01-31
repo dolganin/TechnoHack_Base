@@ -11,11 +11,11 @@
         элемент на всё доступное пространство (LastChildFill="True"). 
         Остальные элементы “прижимаются” к краям, согласно Dock="…".
     -->
-		<DockPanel LastChildFill="True">
+		<DockPanel LastChildFill="True" Background="#e7f1e5">
 
 			<!-- Верхняя панель, где располагается заголовок (Header) --><!--
 			<Border DockPanel.Dock="Top"
-					Background="#DDD"
+					
 					Padding="10">
 				<TextBlock Text="Header"
 						   FontSize="18"
@@ -23,11 +23,11 @@
 			</Border>-->
 
 			<!-- Меню (Menu bar) располагается под заголовком -->
-			<Menu DockPanel.Dock="Top">
+			<Menu DockPanel.Dock="Top" Background="#1666a4">
 				<MenuItem Header="_File">
-					<MenuItem x:Name="OpenFileMenuItem" Header="Open"/>
-					<MenuItem x:Name="SaveMenuItem" Header="Save dataset"/>
-					<MenuItem Header="Exit"/>
+					<MenuItem x:Name="OpenFileMenuItem" Header="Open" Background="#e7f1e5"/>
+					<MenuItem x:Name="SaveMenuItem" Header="Save dataset" Background="#e7f1e5"/>
+					<MenuItem Header="Exit" Background="#e7f1e5"/>
 				</MenuItem>
 				
 				<MenuItem Header="_Edit">
@@ -45,27 +45,35 @@
 					Width="200">
 				<TextBlock Text="Project files"/>
 			</Border>-->
-
 			<!-- Правая панель для списка меток (Created labels) -->
-			<Expander ExpandDirection="Left" DockPanel.Dock="Right" VerticalAlignment="Stretch">
+			<Expander ExpandDirection="Left" DockPanel.Dock="Right" VerticalAlignment="Stretch" Background="#e7f1e5">
+				<Expander.Styles>
+					<!-- Стиль для ToggleButton внутри Expander -->
+					<Style Selector="Expander/template/ ToggleButton#HeaderSite">
+						<!-- Устанавливаем фон кнопки -->
+						<Setter Property="Background" Value="#a2d5d3" />
+					</Style>
+				</Expander.Styles>
 				<Border x:Name="CreatedLabelsBorder"
-						Background="#EEE"
+						Background="#e7f1e5"
 						Padding="10"
 						Width="200">
-					<ScrollViewer VerticalScrollBarVisibility="Visible">
-						<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5">
+					<ScrollViewer VerticalScrollBarVisibility="Visible" Background="#e7f1e5">
+						<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5" Background="#e7f1e5">
+					
 						</StackPanel>
 					</ScrollViewer>
 				</Border>
 			</Expander>
+			
 
 			<!-- Центральная область под редактор (Editor).
              Поскольку LastChildFill=True, 
              этот элемент автоматически заполняет оставшееся пространство. -->
-			<Grid RowDefinitions="* 0.1*">
+			<Grid>
 				<Border x:Name="EditorZone" 
 					Grid.Row="0"
-					Background="#FFF"
+					Background="#e7f1e5"
 						Margin="5"
 						>
 				</Border>

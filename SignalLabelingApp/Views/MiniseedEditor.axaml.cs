@@ -36,6 +36,8 @@ namespace SignalLabelingApp.Views
 
         public OxControl Ox = null; 
 
+        
+
         //public Grid mainGrid;
 
         public MiniseedEditor()
@@ -58,7 +60,7 @@ namespace SignalLabelingApp.Views
                 IsHitTestVisible = true,
                 ColumnDefinitions = new ColumnDefinitions("Auto *"),
                 RowDefinitions = new RowDefinitions("* 40"),
-            Background = new SolidColorBrush(Color.Parse("#EEE"))
+            Background = new SolidColorBrush(Color.Parse("#e7f1e5"))
 
             };
 
@@ -128,6 +130,7 @@ namespace SignalLabelingApp.Views
                 {
                     Content = stationData.StationName,
                     Tag = stationData
+
                 };
 
                 item.PointerPressed += StationItem_PointerPressed;
@@ -136,6 +139,7 @@ namespace SignalLabelingApp.Views
 
             var scaleXSlider = new Slider
             {
+                Background = new SolidColorBrush(Color.Parse("#4c809d")),
                 Minimum = 0.05,
                 Maximum = 3.0,
                 Value = objectSelectionManager.DrawScaleX,
@@ -157,6 +161,7 @@ namespace SignalLabelingApp.Views
 
             var settingsButton = new Button
             {
+                Background = new SolidColorBrush(Color.Parse("#FFFFFF")),
                 Content = "*",
                 Width = 30,
                 Height = 30,
@@ -168,6 +173,7 @@ namespace SignalLabelingApp.Views
 
             var saveButton = new Button
             {
+                Background = new SolidColorBrush(Color.Parse("#FFFFFF")),
                 Content = "Save",
                 Width = 70,
                 Height = 30,
@@ -183,7 +189,7 @@ namespace SignalLabelingApp.Views
                 Orientation = Orientation.Horizontal,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
                 Margin = new Thickness(0, 10, 10, 0),
-                Spacing = 10
+                Spacing = 5
             };
             
             buttonPanel.Children.Add(saveButton);
@@ -356,9 +362,13 @@ namespace SignalLabelingApp.Views
 
             int channelHeight = (int)(EditorCanvas.Bounds.Height / 3);
 
-            RedrawOneChannel(Ch1Oy, 0, channelHeight, currentStationData.Channel1, startX, endX, (ImmutableSolidColorBrush)Brushes.Blue);
-            RedrawOneChannel(Ch2Oy, channelHeight, channelHeight, currentStationData.Channel2, startX, endX, (ImmutableSolidColorBrush)Brushes.Green);
-            RedrawOneChannel(Ch3Oy, 2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, (ImmutableSolidColorBrush)Brushes.Red);
+            var color1 = new ImmutableSolidColorBrush(Colors.Red);    // Красный
+            var color2 = new ImmutableSolidColorBrush(Colors.Green);  // Зеленый
+            var color3 = new ImmutableSolidColorBrush(Colors.Blue);   // Синий
+
+            RedrawOneChannel(Ch1Oy, 0, channelHeight, currentStationData.Channel1, startX, endX, color1);
+            RedrawOneChannel(Ch2Oy, channelHeight, channelHeight, currentStationData.Channel2, startX, endX, color3);
+            RedrawOneChannel(Ch3Oy, 2 * channelHeight, channelHeight, currentStationData.Channel3, startX, endX, color2);
             RedrawOx(Ox, currentStationData.Channel1, startX, endX);
 
 
@@ -411,12 +421,12 @@ namespace SignalLabelingApp.Views
             var polyline = new Polyline
             {
                 Stroke = brush,
-                StrokeThickness = 1
+                StrokeThickness = 2
             };
             var HorPolyline = new Polyline
             {
                 Stroke = Brushes.Black,
-                StrokeThickness = 1
+                StrokeThickness = 2
             };
 
             int startIndex = Math.Max(0, (int)(startX / objectSelectionManager.DrawScaleX));
