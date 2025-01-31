@@ -72,15 +72,15 @@ namespace SignalLabelingApp.Classes
                         }
 
                         // Назначаем канал в StationData
-                        if (channelName == "CH1" || channelName == "HHE")
+                        if (channelName == "CH1" || channelName == "HHE" || channelName == "CXE")
                         {
                             stationData.Channel1 = trace;
                         }
-                        else if (channelName == "CH2" || channelName == "HHN")
+                        else if (channelName == "CH2" || channelName == "HHN" || channelName == "CXN")
                         {
                             stationData.Channel2 = trace;
                         }
-                        else if (channelName == "CH3" || channelName == "HHZ")
+                        else if (channelName == "CH3" || channelName == "HHZ" || channelName == "CXZ")
                         {
                             stationData.Channel3 = trace;
                         }
