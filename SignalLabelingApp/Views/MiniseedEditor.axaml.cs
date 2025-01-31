@@ -161,10 +161,9 @@ namespace SignalLabelingApp.Views
 
             var settingsButton = new Button
             {
-                Background = new SolidColorBrush(Color.Parse("#FFFFFF")),
-                Content = "*",
-                Width = 30,
-                Height = 30,
+                Content = "Options",
+                Width = 100,
+                Height = 33,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
                 Margin = new Thickness(0, 10, 10, 0)
@@ -173,13 +172,12 @@ namespace SignalLabelingApp.Views
 
             var saveButton = new Button
             {
-                Background = new SolidColorBrush(Color.Parse("#FFFFFF")),
                 Content = "Save",
                 Width = 70,
-                Height = 30,
+                Height = 33,
                 HorizontalAlignment = Avalonia.Layout.HorizontalAlignment.Right,
                 VerticalAlignment = Avalonia.Layout.VerticalAlignment.Top,
-                Margin = new Thickness(0, 10, 50, 0)
+                Margin = new Thickness(0, 10, 5, 0)
             };
 
             saveButton.Click += SaveButton_Click;

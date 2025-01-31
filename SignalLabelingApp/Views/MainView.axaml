@@ -24,18 +24,17 @@
 
 			<!-- Меню (Menu bar) располагается под заголовком -->
 			<Menu DockPanel.Dock="Top" Background="#1666a4">
-				<MenuItem Header="_File">
-					<MenuItem x:Name="OpenFileMenuItem" Header="Open" Background="#e7f1e5"/>
-					<MenuItem x:Name="SaveMenuItem" Header="Save dataset" Background="#e7f1e5"/>
-					<MenuItem Header="Exit" Background="#e7f1e5"/>
+				<MenuItem Header="_File" CornerRadius="5, 5, 5, 5">
+					<MenuItem x:Name="OpenFileMenuItem" Header="Open"/>
+					<MenuItem x:Name="SaveMenuItem" Header="Save dataset"/>
+					<MenuItem Header="Exit"/>
 				</MenuItem>
 				
-				<MenuItem Header="_Edit">
+				<MenuItem Header="_Edit" CornerRadius="5, 5, 5, 5">
 					<MenuItem Header="Undo"/>
 					<MenuItem Header="Redo"/>
 				</MenuItem>
 			</Menu>
-
 
 
 			<!-- Левая панель для списка файлов (Project files) -->
@@ -56,7 +55,7 @@
 				</Expander.Styles>
 				<Border x:Name="CreatedLabelsBorder"
 						Background="#e7f1e5"
-						Padding="10"
+						Padding="0"
 						Width="200">
 					<ScrollViewer VerticalScrollBarVisibility="Visible" Background="#e7f1e5">
 						<StackPanel Orientation="Vertical" x:Name="CreatedLabels" Spacing="5" Background="#e7f1e5">
