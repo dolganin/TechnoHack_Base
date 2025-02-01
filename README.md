@@ -81,8 +81,7 @@
 ## Пример размеченного json-файла
 
 **json-файл**
-```
-json
+```json
 {
     "label": {
         "$type": "detection",
